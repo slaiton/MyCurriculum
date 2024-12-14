@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/static/css/main.79d03508.css",
+    "main.js": "/static/js/main.c1eebaf2.js",
+    "static/js/488.7465e5a0.chunk.js": "/static/js/488.7465e5a0.chunk.js",
+    "static/media/TrenchThin-aZ1J.ttf": "/static/media/TrenchThin-aZ1J.194c4339607fb3f9e334.ttf",
+    "static/media/perfil.jpg": "/static/media/perfil.b16c5573420494b0ce31.jpg",
+    "static/media/VeniteAdoremus-rgRBA.ttf": "/static/media/VeniteAdoremus-rgRBA.eef5f3d91d3f6cbd1b22.ttf",
+    "static/media/VeniteAdoremusStraight-Yzo6v.ttf": "/static/media/VeniteAdoremusStraight-Yzo6v.2aeb496f572a02a3cf21.ttf",
+    "static/media/TrenchThin-16R0.otf": "/static/media/TrenchThin-16R0.f24bea9acb22fb80013b.otf",
+    "index.html": "/index.html",
+    "main.79d03508.css.map": "/static/css/main.79d03508.css.map",
+    "main.c1eebaf2.js.map": "/static/js/main.c1eebaf2.js.map",
+    "488.7465e5a0.chunk.js.map": "/static/js/488.7465e5a0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.79d03508.css",
+    "static/js/main.c1eebaf2.js"
+  ]
+}
