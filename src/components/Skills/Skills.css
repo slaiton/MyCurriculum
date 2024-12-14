@@ -1,0 +1,59 @@
+.skills {
+    height: 100vh;
+    padding: 50px 20px;
+    background-color: #cccbcb;
+}
+
+.skills-title {
+    width: 100%;
+    position: relative;
+    text-align: center;
+}
+
+.skills-container {
+    position: relative;
+    width: 70%;
+    left: 15%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: min-content;
+    gap: 30px;
+    padding: 10px;
+  }
+  
+ .skills-title h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  
+  .skill-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    text-align: left;
+  }
+  
+  .progress-bar-container {
+    background: #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 20px;
+    width: 100%;
+    position: relative;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(to right, #4caf50, #81c784);
+    transition: width 0.3s ease-in-out;
+  }
+  
+  .percentage {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    text-align: right;
+    display: block;
+    color: #666;
+  }

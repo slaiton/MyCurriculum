@@ -1,0 +1,142 @@
+
+ .overlay h1 {
+    font-family: "Karla", sans-serif;
+    font-optical-sizing: auto;
+    color:#FFF;
+  }
+  
+ .overlay p {
+    font-family: "Karla", sans-serif;
+    font-optical-sizing: auto;
+  }
+  
+  .home-container {
+    height: 100%;
+  }
+
+
+  .video-background {
+    position: relative;
+    height: 100vh; 
+    overflow: hidden;
+  }
+  
+  .background-container {
+    height: 100vh; 
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 35%;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    color:#FFFFFF;
+    text-align: center;
+  }
+  
+  .overlay h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .overlay p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Secciones */
+  .home-main {
+    margin-top: 60px; /* Espacio para el header */
+    padding: 20px;
+  }
+
+  
+  .arrow-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .scroll-down {
+    font-size: 2rem;
+    text-decoration: none;
+    color: white;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px 15px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+  
+  .scroll-down:hover {
+    background: rgba(0, 0, 0, 0.5);
+    transform: scale(1.1);
+  }
+
+
+  .social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 45px;
+    margin: 20px 0;
+    z-index: 9999;
+  }
+  
+  .social-icon {
+    width: 45px;
+    height: 45px;
+    text-decoration: none;
+    font-size: 45px;
+    color: #fff;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  
+  .social-icon:hover {
+    animation: jump 1.5s ease-in-out infinite;
+    color: #ff6347;
+  }
+
+
+  @keyframes jump {
+    0% {
+      transform: scale(1) translateY(0);
+    }
+    10% {
+      transform: scale(1.2) translateY(0);
+    }
+    25% {
+      transform: scale(1.5) translateY(-10px); 
+    }
+    50% {
+      transform: scale(1.5) translateY(15px); 
+    }
+    70% {
+      transform: scale(1.5) translateY(-7px); 
+    }
+    90% {
+      transform: scale(1.5) translateY(5px); 
+    }
+    100% {
+      transform: scale(1) translateY(0);
+    }
+  }

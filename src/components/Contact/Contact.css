@@ -1,0 +1,107 @@
+.contact {
+    height: 100vh;
+    padding: 50px 20px;
+    background-color: #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-container {
+  position: relative;
+  width: 100%;
+  height: 60px;
+  text-align: center;
+}
+
+.title-container h2 {
+  color:#FFFFFF;
+}
+  
+
+.form-container {
+    position: relative;
+    width:60%;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+
+  .form-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .contact-form {
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+    background: transparent;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .contact-form h2 {
+    margin-bottom: 1rem;
+    color: #333;
+    text-align: center;
+  }
+  
+  .form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 20px;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: #007BFF;
+  }
+  
+  .form-group label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 0.9rem;
+    color: #aaa;
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .form-group input:focus + label,
+  .form-group textarea:focus + label,
+  .form-group input:not(:placeholder-shown) + label,
+  .form-group textarea:not(:placeholder-shown) + label {
+    top: -10px;
+    left: 5px;
+    font-size: 0.75rem;
+    color: #007BFF;
+  }
+  
+  .submit-button {
+    background: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background: #0056b3;
+  }

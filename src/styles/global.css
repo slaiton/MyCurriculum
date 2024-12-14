@@ -1,0 +1,44 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+
+  body {
+    background-color: #675B33;
+  }
+
+  ::-webkit-scrollbar {
+    width: 12px; /* Ancho de la barra de desplazamiento */
+    height: 12px; /* Altura de la barra de desplazamiento horizontal */
+  }
+  
+  /* Estilizar la parte de la barra de desplazamiento (el "track") */
+  ::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Color de fondo de la barra de desplazamiento */
+    border-radius: 10px;
+  }
+  
+  /* Estilizar la parte de la barra de desplazamiento que se mueve (el "thumb") */
+  ::-webkit-scrollbar-thumb {
+    background-color: #675B33; /* Color de la parte que se desplaza */
+    border-radius: 10px;
+  }
+  
+  /* Estilizar la parte de la barra de desplazamiento cuando se pasa el mouse sobre ella */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #675B33; /* Color al pasar el mouse */
+  }
+
+  .d-flex {
+    display: flex;
+  }
+
+  .align-center {
+    text-align: center;
+  }
+
+  .justify-content-center {
+    justify-content: center;
+  }
