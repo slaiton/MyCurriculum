@@ -25,4 +25,4 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "public/**"
-          target: "/var/www/html/app"
+          target: "/var/www/html"
