@@ -98,6 +98,10 @@
   }
 
   @media (max-width: 868px) {
+    .experience {
+      display: block;
+    }
+
     .experience-table {
         display: block; 
         min-width: 100%; 
