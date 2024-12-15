@@ -122,6 +122,7 @@
 
   @media (max-width: 768px) {
     .overlay {
+      width: auto;
       top: 20%;
     }
 
