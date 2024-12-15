@@ -22,7 +22,7 @@
   }
 
   .video-background video{
-    height: 100vh;
+    width: 100%;
   }
   
   .background-container {
@@ -122,12 +122,17 @@
 
   @media (max-width: 768px) {
     .overlay {
-      width: auto;
+      width: 100%;
       top: 20%;
     }
 
     .overlay h1 {
       font-size: 2.2rem;
+    }
+
+    .video-background video{
+      height: 100vh;
+      width: auto;
     }
 
   }
