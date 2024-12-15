@@ -1,5 +1,5 @@
 .experience {
-    height: 90vh;
+    height: 100vh;
     padding: 50px 20px;
     background-color: #000000;
     display: flex;
@@ -13,21 +13,23 @@
 }
 
 .table-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px;
-  }
-  
-  .experience-table {
-    border-collapse: collapse;
-    width: 100%;
-    max-width: 1100px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 1s ease-in-out;
-  }
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  overflow-x: auto; /* Permite scroll horizontal si el contenido es más ancho */
+}
+
+.experience-table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 1100px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1s ease-in-out;
+  min-width: 600px; /* Asegura un tamaño mínimo para pantallas pequeñas */
+}
 
   .experience-table th h1{
     font-family: "Karla", sans-serif;
@@ -94,3 +96,34 @@
       opacity: 1;
     }
   }
+
+  @media (max-width: 868px) {
+    .experience-table {
+        display: block; 
+        min-width: 100%; 
+
+    }
+
+    .experience-table tbody tr {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #2a2a2a;
+    }
+
+    .experience-table tbody tr td {
+        display: flex;
+        justify-content: flex-start;
+        padding: 15px;
+        border-bottom: none;
+    }
+
+    .experience-table tbody tr td::before {
+        content: attr(data-label); /* Usa el atributo data-label para mostrar el encabezado */
+        font-weight: bold;
+        color: #ccc;
+        margin-right: 10px;
+    }
+}

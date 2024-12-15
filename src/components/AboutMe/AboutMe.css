@@ -1,14 +1,16 @@
 .about {
-    height: 90vh;
-    padding: 50px 20px;
+    position: relative;
+    height: 100vh;
+    padding: 5vh 5vw;
     background-color: #f9f9f9;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-
 .profile-container {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 30px;
@@ -25,12 +27,6 @@
     overflow: hidden;
     background-size: cover;
     background-position: center;
-}
-
-.profile-image img {
-    width: 100%;
-    height: auto;
-    display: block;
 }
 
 .profile-description {
@@ -105,4 +101,54 @@
 
 .grid-item p {
     color: #666;
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .profile {
+        position: relative;
+        top: 150px;
+    }
+    .profile-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        gap: 2rem;
+        width: 100%;
+        max-width: 1200px;
+        text-align: center;
+        flex-direction: column;
+    }
+
+    .profile-expirence {
+        grid-template-columns: 1fr;
+        margin-top: 15px !important;
+    }
+
+    .profile-description {
+        max-width: 90%;
+    }
+
+    .years-expirence {
+        width: 100%;
+    }
+
+    .grid-item {
+        width: auto;
+    }
+    .profile-grid {
+        margin-bottom: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-container {
+        gap: 1rem;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
 }
