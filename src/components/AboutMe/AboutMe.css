@@ -106,9 +106,14 @@
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
+
+    .about {
+        display: block;
+    }
+
     .profile {
         position: relative;
-        top: 150px;
+        top: 30px;
     }
     .profile-container {
         display: flex;

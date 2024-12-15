@@ -20,6 +20,10 @@
     height: 100vh; 
     overflow: hidden;
   }
+
+  .video-background {
+    height: 100vh;
+  }
   
   .background-container {
     height: 100vh; 
