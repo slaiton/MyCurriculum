@@ -120,6 +120,17 @@
     color: #ff6347;
   }
 
+  @media (max-width: 768px) {
+    .overlay {
+      top: 20%;
+    }
+
+    .overlay h1 {
+      font-size: 2.2rem;
+    }
+
+  }
+
 
   @keyframes jump {
     0% {

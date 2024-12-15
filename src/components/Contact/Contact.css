@@ -106,3 +106,15 @@
   .submit-button:hover {
     background: #0056b3;
   }
+
+@media (max-width: 768px) {
+  .contact {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .form-container {
+    top:25%;
+    left: 10%;
+  }
+}
