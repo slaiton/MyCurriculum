@@ -6,6 +6,7 @@ import './AboutMe.css';
 
 
 const AnimatedNumber = ({ targetNumber }) => {
+    
     const { number } = useSpring({
         from: { number: 0 },
         to: { number: targetNumber },
@@ -30,9 +31,21 @@ function AboutMe({ onNavigate }) {
 
         onNavigate(hash)
     };
+    const [canNavigate, setCanNavigate] = useState(false);
 
 
+
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setCanNavigate(true);
+      }, 5000);
+  
+      return () => clearTimeout(timer);
+    }, []);
+
+  
     const handleScroll = (event) => {
+      if (!canNavigate) return; 
         if (event.deltaY > 0) {
             navigate("#experience");
         } else if (event.deltaY < 0) {

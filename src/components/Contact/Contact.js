@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useScroll from '../../hooks/useScrollDetection';
@@ -33,21 +33,23 @@ function Contact({ onNavigate }) {
     const { name, value } = e.target;
     setEmailData({ ...emailData, [name]: value });
   };
+  const [canNavigate, setCanNavigate] = useState(false);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = validate();
     try {
-    
-    if (Object.keys(newErrors).length === 0) {
-      const response = await sendEmail(emailData);
-      alert(response.message);
-      setFormData({ name: "", email: "", message: "" });
-      setErrors({});
-    } else {
-      setErrors(newErrors);
-    }
+
+      if (Object.keys(newErrors).length === 0) {
+        const response = await sendEmail(emailData);
+        alert(response.message);
+        setFormData({ name: "", email: "", message: "" });
+        setErrors({});
+      } else {
+        setErrors(newErrors);
+      }
 
 
     } catch (error) {
@@ -75,7 +77,18 @@ function Contact({ onNavigate }) {
     return newErrors;
   };
 
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCanNavigate(true);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+
   const handleScroll = (event) => {
+    if (!canNavigate) return;
     if (event.deltaY > 0) {
 
     } else if (event.deltaY < 0) {

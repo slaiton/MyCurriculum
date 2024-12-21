@@ -6,14 +6,23 @@ import useScroll from '../../hooks/useScrollDetection';
 import './Home.css';
 import '../../styles/fonts.css';
 function Home({ onNavigate }) {
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const { scrollDirection, scrollDistance } = useScrollDirection();
 
   const handleIconClick = (url) => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
+  const [canNavigate, setCanNavigate] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCanNavigate(true);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  
   const handleScroll = (event) => {
+    if (!canNavigate) return; 
     if (event.deltaY > 0) {
       onNavigate("#aboutMe");
     } else if (event.deltaY < 0) {

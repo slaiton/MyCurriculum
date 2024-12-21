@@ -34,8 +34,19 @@ function Experience({ onNavigate }) {
         }
     };
 
+    const [canNavigate, setCanNavigate] = useState(false);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setCanNavigate(true);
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, []);
+
 
     const handleScroll = (event) => {
+        if (!canNavigate) return;
         if (event.deltaY > 0) {
             onNavigate("#skills");
         } else if (event.deltaY < 0) {
