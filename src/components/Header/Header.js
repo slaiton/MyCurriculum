@@ -31,7 +31,7 @@ function Header({ hideHeader, onNavigate }) {
 
       {/* Menú vertical */}
       <header className={`vertical-header ${isVisible ? "show" : "hide"}`}>
-        <div className="language-toggle">
+        {/* <div className="language-toggle">
           <button
             className={`language-btn ${language === "EN" ? "selected" : ""}`}
             onClick={() => setLanguage("EN")}
@@ -44,7 +44,7 @@ function Header({ hideHeader, onNavigate }) {
           >
             ES
           </button>
-        </div>
+        </div> */}
         <nav>
           <ul className="menu">
             <li>
