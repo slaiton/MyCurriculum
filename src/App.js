@@ -6,6 +6,7 @@ import Skills from './components/Skills/Skills';
 import Experience from './components/Experience/Experience';
 import Contact from './components/Contact/Contact';
 import Footer from './components/Footer/Footer';
+import { initGA, logPageView } from "./utils/analytics";
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
@@ -19,8 +20,12 @@ library.add(fab, faCheckSquare, faCoffee)
 function App() {
   const [currentSection, setCurrentSection] = React.useState("#home");
   const [position, setPosition] = useState({ x: 0, y: 0 });
-
+  console.log(currentSection);
+  
   useEffect(() => {
+    initGA()
+    logPageView()
+
     const handleMouseMove = (event) => {
       console.log(event);
       setPosition({ x: event.clientX, y: event.clientY });
