@@ -107,7 +107,41 @@ function Contact({ onNavigate }) {
       id="contact" className="contact">
 
 
+      <motion.div
+        className="contact-container"
+        initial={{ scale: 0.8 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+      >
+        <h2 className="title-container">Contacto</h2>
+        <ul className="contact-info" style={{ textAlign: 'center', fontSize: '1.5rem', listStyle: 'none', padding: 0, color: '#FFF' }}>
+          <motion.li whileHover={{ scale: 1.1 }}>
+            📧 <a href="mailto:slaiton@example.com" style={{ color: 'white', textDecoration: 'none' }}>jstivenlaiton@gmail.com</a>
+          </motion.li>
+          <motion.li whileHover={{ scale: 1.1 }}>
+            📱 +57 304 641 5909
+          </motion.li>
+        </ul>
+        <div className="social-links" style={{ marginTop: '150px'}}>
+          <span
+            className="social-icon linkedin"
+            onClick={() => handleIconClick('https://www.linkedin.com/in/stiven-laiton-3020a615a/')}
+            aria-label="LinkedIn"
+          >
+            <FontAwesomeIcon icon={['fab', 'linkedin']} />
+          </span>
+          <span
+            className="social-icon github"
+            onClick={() => handleIconClick('https://github.com/slaiton')}
+            aria-label="GitHub"
+          >
+            <FontAwesomeIcon icon={['fab', 'github']} />
+          </span>
+        </div>
+      </motion.div>
 
+
+      {/* 
       <div className={`form-container ${isVisible ? "visible" : ""}`}>
         <div className="title-container">
           <h2>Contacto</h2>
@@ -176,7 +210,7 @@ function Contact({ onNavigate }) {
           </span>
         </div>
 
-      </div>
+      </div> */}
 
     </motion.section>
   );
