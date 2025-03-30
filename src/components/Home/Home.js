@@ -47,10 +47,14 @@ function Home({ onNavigate }) {
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
 
-        <video src="../../assets/video/giphy.mp4" autoPlay loop muted />
+        <video src="../../assets/video/code.mp4" autoPlay loop muted />
+        <div className="overlay"></div>
+
+      </motion.div>
+
 
         <motion.div
-          className="overlay"
+          className="content"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
@@ -92,7 +96,6 @@ function Home({ onNavigate }) {
 
 
         </motion.div>
-      </motion.div>
 
     </motion.div>
   );
