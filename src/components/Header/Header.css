@@ -144,6 +144,7 @@
 }
 
 .menu a {
+  font-family: "Fira Code", monospace;
   text-decoration: none;
   font-size: 25px;
   font-weight: bold;
@@ -180,4 +181,29 @@
 .social-header-icon:hover {
   transform: scale(1.1);
   color: #ff6347;
+}
+
+
+.bottom-menu {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #222;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 22px;
+  z-index: 99;
+  background-color: transparent;
+  margin-bottom: 20px;
+}
+
+.menu-item {
+  font-family: "Fira Code", monospace;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  color: #1db954;
 }
