@@ -184,6 +184,17 @@
 }
 
 
+.menu-container {
+  position: absolute;
+  bottom: 70px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  z-index: 99;
+  background-color: red;
+}
+
 .bottom-menu {
   position: fixed;
   bottom: 0;
@@ -193,8 +204,7 @@
   text-align: center;
   padding: 10px 0;
   font-size: 22px;
-  z-index: 99;
-  background-color: transparent;
+  background-color: #00000096;
   margin-bottom: 20px;
 }
 
@@ -206,4 +216,22 @@
 
 .menu-item:hover {
   color: #1db954;
+}
+
+.menu-icon {
+  position: fixed;
+  left: 10%;
+  width: 60px;
+  cursor: pointer;
+}
+
+.menu-item {
+  cursor: pointer;
+  margin: 0 5px;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.menu-item:hover {
+  color: #007bff;
 }
