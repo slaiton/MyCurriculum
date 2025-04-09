@@ -11,12 +11,39 @@ function Experience({ onNavigate }) {
     const [currentPage, setCurrentPage] = useState(1);
 
     const data = [
-        { jobTitle: 'Analista de software', company: 'Aldia Logistica', dateStart: '2020-03-20', dateEnd: 'Actualmente', description: "Desarrollo y mantenimiento de software en PHP, javascript y lenguajes relacionados, Manejo de servidor de base de datos. creación de consultas y procesos almacenados. desarrollador y administrador de página web corporativa, Lider en Integraciones tecnológicas con nuevos clientes y proveedores en Servicios Web Rest y Soap. Desarrollo de aplicaciones Android en Kotlin y Angular" },
-        { jobTitle: 'Front-End Developer', company: 'Aldia Logistica', dateStart: '2018-02-18', dateEnd: '2020-03-20', description: "Mantenimientos correctivos y preventivos de equipos de cómputo, soporte al usuario, Participación en desarrollo de software de logística, establecer objetivos y metas, así como directrices, estrategias y cursos de acción para la implementación y ejecución del proyecto. Desarrollo web y manejo se servicios web" },
-        { jobTitle: 'Back-End Developer', company: 'Konecta', dateStart: '2018-09-20', dateEnd: '2019-02-01', description: 'Brindar atención al cliente por medio telefónico a clientes de empresa de telefonía española.' },
-        // { jobTitle: 'Full-Stack Developer', company: 'WebLab', dateStart: '2024-01-10', dateEnd: '2024-05-10', description: 'Boston' },
-        // { jobTitle: 'Project Manager', company: 'ProjectPro', dateStart: '2024-01-10', dateEnd: '2024-05-10', description: 'Seattle' },
-    ];
+        {
+          jobTitle: 'Analista de software',
+          company: 'Aldia Logistica',
+          dateStart: '2020-03-20',
+          dateEnd: 'Actualmente',
+          description:
+            "Responsable del ciclo completo de desarrollo como Full Stack Developer. He liderado y ejecutado proyectos en tecnologías como Kotlin, Laravel, Angular, React, Express, PHP y JavaScript nativo. Despliegues realizados en entornos AWS y Docker. Gestión de bases de datos SQL y PostgreSQL. Implementación de arquitecturas Hexagonales y Clean Architecture. Integración de servicios REST y SOAP con clientes y proveedores. Desarrollo de aplicaciones Android y mantenimiento de soluciones web."
+        },
+        {
+          jobTitle: 'Desarrollador Freelance',
+          company: '',
+          dateStart: '2019-01-20',
+          dateEnd: 'Actualmente',
+          description:
+            "Desarrollo de soluciones a medida para clientes independientes, aplicando conocimientos Full Stack en Laravel, Angular, Kotlin, entre otros. Diseño y despliegue de APIs, integración de servicios web, administración de servidores y soporte general. Trabajo enfocado en entregas rápidas, eficientes y adaptadas a las necesidades del cliente."
+        },
+        {
+          jobTitle: 'Gestor de desarrollo',
+          company: 'Aldia Logistica',
+          dateStart: '2018-02-18',
+          dateEnd: '2020-03-20',
+          description:
+            "Participación activa en la creación e integración de APIs para procesos logísticos. Desarrollo y administración de una página web corporativa en WordPress. Implementación de soluciones puntuales con Laravel. Gestión de objetivos técnicos del equipo y definición de estrategias para proyectos internos."
+        },
+        {
+          jobTitle: 'Auxiliar de sistemas',
+          company: 'Konecta',
+          dateStart: '2018-09-20',
+          dateEnd: '2019-02-01',
+          description:
+            "Soporte de primer nivel a usuarios finales, mantenimiento preventivo y correctivo de equipos de cómputo. Diagnóstico y solución de problemas técnicos básicos en hardware y software."
+        }
+      ];
 
 
     const totalPages = Math.ceil(data.length / rowsPerPage);

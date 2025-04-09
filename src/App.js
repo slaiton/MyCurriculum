@@ -54,6 +54,14 @@ function App() {
         ></div>
       </div>
       <Header onNavigate={handleNavigate} />
+      <a 
+        href="../../assets/files/HV.pdf" 
+        download 
+        className="floating-button"
+        title="Descargar CV"
+      >
+        📄 Descargar CV
+      </a>
       <div className="sections">
         {currentSection === "#home" && <Home onNavigate={handleNavigate} />}
         {currentSection === "#aboutMe" && <AboutMe onNavigate={handleNavigate} />}

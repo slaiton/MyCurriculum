@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.34f3784c.css",
-    "main.js": "/static/js/main.6d4458ce.js",
+    "main.css": "/static/css/main.421a3176.css",
+    "main.js": "/static/js/main.93879339.js",
     "static/js/488.7465e5a0.chunk.js": "/static/js/488.7465e5a0.chunk.js",
     "static/media/TrenchThin-aZ1J.ttf": "/static/media/TrenchThin-aZ1J.194c4339607fb3f9e334.ttf",
     "static/media/perfil.jpg": "/static/media/perfil.b16c5573420494b0ce31.jpg",
@@ -9,12 +9,12 @@
     "static/media/VeniteAdoremusStraight-Yzo6v.ttf": "/static/media/VeniteAdoremusStraight-Yzo6v.2aeb496f572a02a3cf21.ttf",
     "static/media/TrenchThin-16R0.otf": "/static/media/TrenchThin-16R0.f24bea9acb22fb80013b.otf",
     "index.html": "/index.html",
-    "main.34f3784c.css.map": "/static/css/main.34f3784c.css.map",
-    "main.6d4458ce.js.map": "/static/js/main.6d4458ce.js.map",
+    "main.421a3176.css.map": "/static/css/main.421a3176.css.map",
+    "main.93879339.js.map": "/static/js/main.93879339.js.map",
     "488.7465e5a0.chunk.js.map": "/static/js/488.7465e5a0.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.34f3784c.css",
-    "static/js/main.6d4458ce.js"
+    "static/css/main.421a3176.css",
+    "static/js/main.93879339.js"
   ]
 }
