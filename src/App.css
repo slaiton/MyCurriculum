@@ -120,3 +120,15 @@ body {
   color: #00FFFF;
   text-decoration: none;
 }
+
+@media (max-width: 500px) {
+
+  .floating-button {
+    font-size: 15px;
+  }
+
+  .floating-name {
+    font-size: 22px;
+  }
+
+}
