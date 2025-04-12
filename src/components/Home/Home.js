@@ -59,8 +59,8 @@ function Home({ onNavigate }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          <h1>Jhoan Stiven Laiton</h1>
-          <p>Full Stack Developer</p>
+          {/* <h1>Jhoan Stiven Laiton</h1> */}
+          <h1>Full Stack Developer</h1>
 
           <div className="social-links">
             <span

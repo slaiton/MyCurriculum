@@ -20,7 +20,14 @@ library.add(fab, faCheckSquare, faCoffee)
 function App() {
   const [currentSection, setCurrentSection] = React.useState("#home");
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  console.log(currentSection);
+
+  const sectionColors = {
+    "#home": "#00ffff",
+    "#aboutMe": "#000000",
+    "#skills": "#6BCB77",
+    "#experience": "#FFD93D",
+    "#contact": "#A66DD4"
+  };
   
   useEffect(() => {
     initGA()
@@ -54,6 +61,15 @@ function App() {
         ></div>
       </div>
       <Header onNavigate={handleNavigate} />
+      <a
+        href="#"
+        className="floating-name"
+        style={{ color: sectionColors[currentSection] || "#000" }}
+        >
+          Stiven Laiton
+
+      </a>
+
       <a 
         href="../../assets/files/HV.pdf" 
         download 
