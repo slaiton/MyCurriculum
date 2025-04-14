@@ -4,6 +4,7 @@ import Home from './components/Home/Home';
 import AboutMe from './components/AboutMe/AboutMe';
 import Skills from './components/Skills/Skills';
 import Experience from './components/Experience/Experience';
+import ProjectReview from './components/Projects/Projects';
 import Contact from './components/Contact/Contact';
 import Footer from './components/Footer/Footer';
 import { initGA, logPageView } from "./utils/analytics";
@@ -26,6 +27,7 @@ function App() {
     "#aboutMe": "#000000",
     "#skills": "#6BCB77",
     "#experience": "#FFD93D",
+    "#projects": "#ff2858",
     "#contact": "#A66DD4"
   };
   
@@ -84,6 +86,7 @@ function App() {
         {currentSection === "#skills" && <Skills onNavigate={handleNavigate} />}
         {currentSection === "#experience" && <Experience onNavigate={handleNavigate} />}
         {currentSection === "#contact" && <Contact onNavigate={handleNavigate} />}
+        {currentSection === "#projects" && <ProjectReview onNavigate={handleNavigate} />}
       </div>
       {/* <Footer /> */}
     </div>

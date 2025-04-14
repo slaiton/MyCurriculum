@@ -9,7 +9,8 @@ function Experience({ onNavigate }) {
     const [isVisible, setIsVisible] = React.useState(true);
     const rowsPerPage = 4;
     const [currentPage, setCurrentPage] = useState(1);
-
+    const [canNavigate, setCanNavigate] = useState(false);
+    
     const data = [
         {
           jobTitle: 'Analista de software',
@@ -61,7 +62,7 @@ function Experience({ onNavigate }) {
         }
     };
 
-    const [canNavigate, setCanNavigate] = useState(false);
+  
 
     useEffect(() => {
         const timer = setTimeout(() => {

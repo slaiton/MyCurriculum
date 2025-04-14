@@ -23,50 +23,56 @@ function Header({ onNavigate }) {
   return (
     <div className="menu-container">
       {!isVisible && (
-        <motion.img 
-        src="/icon.png" 
-        alt="Menu" 
-        className="menu-icon" 
-        onClick={() => setIsVisible(true)} 
-        whileHover={{ scale: 1.2, rotate: 360 }}
-        animate={animateIcon ? { rotate: [0, 70, -80, 0] } : {}}
-        transition={{ duration: 0.5 }}
-      />
+        <motion.img
+          src="/icon.png"
+          alt="Menu"
+          className="menu-icon"
+          onClick={() => setIsVisible(true)}
+          whileHover={{ scale: 1.2, rotate: 360 }}
+          animate={animateIcon ? { rotate: [0, 70, -80, 0] } : {}}
+          transition={{ duration: 0.5 }}
+        />
       )}
       <AnimatePresence>
         {isVisible && (
-          <motion.div 
+          <motion.div
             className="bottom-menu"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
           >
-            <motion.span 
-              className="menu-item" 
+            <motion.span
+              className="menu-item"
               onClick={() => handleHeaderClick("#home")}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >Inicio</motion.span> |
-            <motion.span 
-              className="menu-item" 
+            <motion.span
+              className="menu-item"
               onClick={() => handleHeaderClick("#aboutMe")}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >Acerca de mí</motion.span> |
-            <motion.span 
-              className="menu-item" 
+            <motion.span
+              className="menu-item"
               onClick={() => handleHeaderClick("#experience")}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >Experiencia</motion.span> |
-            <motion.span 
-              className="menu-item" 
+            <motion.span
+              className="menu-item"
               onClick={() => handleHeaderClick("#skills")}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >Habilidades</motion.span> |
-            <motion.span 
-              className="menu-item" 
+            <motion.span
+              className="menu-item"
+              onClick={() => handleHeaderClick("#projects")}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >Proyectos</motion.span> |
+            <motion.span
+              className="menu-item"
               onClick={() => handleHeaderClick("#contact")}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
