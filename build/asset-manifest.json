@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.192cc885.css",
-    "main.js": "/static/js/main.63648d69.js",
+    "main.js": "/static/js/main.799b3b1a.js",
     "static/js/488.7465e5a0.chunk.js": "/static/js/488.7465e5a0.chunk.js",
     "static/media/Caveat-VariableFont_wght.ttf": "/static/media/Caveat-VariableFont_wght.31f0a02d84d42627c894.ttf",
     "static/media/TrenchThin-aZ1J.ttf": "/static/media/TrenchThin-aZ1J.194c4339607fb3f9e334.ttf",
@@ -11,11 +11,11 @@
     "static/media/TrenchThin-16R0.otf": "/static/media/TrenchThin-16R0.f24bea9acb22fb80013b.otf",
     "index.html": "/index.html",
     "main.192cc885.css.map": "/static/css/main.192cc885.css.map",
-    "main.63648d69.js.map": "/static/js/main.63648d69.js.map",
+    "main.799b3b1a.js.map": "/static/js/main.799b3b1a.js.map",
     "488.7465e5a0.chunk.js.map": "/static/js/488.7465e5a0.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.192cc885.css",
-    "static/js/main.63648d69.js"
+    "static/js/main.799b3b1a.js"
   ]
 }

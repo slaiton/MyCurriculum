@@ -52,7 +52,7 @@ const ProjectReview = ({ onNavigate }) => {
 
     return (
         <div className="projects-wrapper">
-            <h1>Mis Proyectos Públicos</h1>
+            <h1>Mis Proyectos</h1>
             <div className="projects-container">
                 {currentProjects.map((repo) => (
                     <div key={repo.id} className="project-card">
