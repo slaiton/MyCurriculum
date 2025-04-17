@@ -1,115 +1,254 @@
 .projects-wrapper {
-    background-color: #000;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 0;
-    color: white;
-  }
-  
-  .projects-container {
-    width: 80%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 100px;
-  }
-  
-  .project-card {
-    background-color: #111;
-    border-radius: 10px;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    transition: transform 0.3s;
-  }
-  
-  .project-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .project-image {
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-  
-  .project-title {
-    font-size: 1.2rem;
-    margin: 0.5rem 0 0;
-  }
-  
-  .project-description {
-    font-size: 0.95rem;
-    margin-top: 0.3rem;
-    line-height: 1.4;
-  }
-  
-  .tech-stack {
-    margin-top: 0.5rem;
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .tech-item {
-    background-color: #222;
-    padding: 0.3rem 0.6rem;
-    border-radius: 5px;
-    font-size: 0.85rem;
-    animation: fadeIn 1s ease-in-out;
-  }
-  
-  .project-link {
-    margin-top: 0.5rem;
-    color: #1e90ff;
-    text-decoration: none;
-  }
-  
-  .project-link:hover {
-    text-decoration: underline;
-  }
-  
+  background-color: #000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 0;
+  color: white;
+}
+
+.projects-container {
+  width: 80%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 100px;
+}
+
+.project-card {
+  background-color: #111;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.project-card:hover {
+  transform: scale(1.05);
+}
+
+.project-image {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.project-title {
+  font-size: 1.2rem;
+  margin: 0.5rem 0 0;
+}
+
+.project-description {
+  font-size: 0.95rem;
+  margin-top: 0.3rem;
+  line-height: 1.4;
+}
+
+.tech-stack {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tech-item {
+  background-color: #222;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.project-link {
+  margin-top: 0.5rem;
+  color: #1e90ff;
+  text-decoration: none;
+}
+
+.project-link:hover {
+  text-decoration: underline;
+}
+
+
+/*DETAIL*/
+
+.project-detail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6) !important;
+  z-index: 1000;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+}
+
+.project-detail-content {
+  position: relative;
+  background: #3a3838;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  max-height: 90%;
+  overflow-y: auto;
+  z-index: 1;
+}
+
+.project-detail h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.project-detail .project-image-large {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.project-detail p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+.project-detail .back-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent !important;
+  color: #FFF;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.project-detail .back-button:hover {
+  background: #ddd;
+}
+
+.project-detail a {
+  display: block;
+  margin-top: 20px;
+  color: #007bff;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.project-detail a:hover {
+  text-decoration: underline;
+}
+
+/*LIST*/
+
+.projects-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  margin: 2rem 0;
+  transition: all 0.5s ease-in-out;
+}
+
+.project-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 1rem;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.5);
+}
+
+.project-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.project-info {
+  margin-top: 1rem;
+}
+
+.tech-stack {
+  margin-top: 0.5rem;
+}
+
+.tech-item {
+  background: #1e88e5;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  color: white;
+}
+
 /* Paginador */
 .pagination {
-    margin-top: 2rem;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
 .pagination button {
-    padding: 0.5rem 1rem;
-    border: none;
-    background-color: #444;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #444;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .pagination button:disabled {
-    background-color: #222;
-    cursor: not-allowed;
+  background-color: #222;
+  cursor: not-allowed;
 }
 
 .pagination span {
-    font-size: 1rem;
+  font-size: 1rem;
 }
 
 /* Responsive para pantallas pequeñas */
 @media (max-width: 900px) {
-    .projects-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .projects-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 600px) {
-    .projects-container {
-        grid-template-columns: 1fr;
-    }
+  .projects-container {
+    grid-template-columns: 1fr;
+  }
 }
