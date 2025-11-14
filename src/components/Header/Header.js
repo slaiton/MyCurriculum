@@ -17,7 +17,7 @@ function Header({ onNavigate }) {
 
   const handleHeaderClick = (targetId) => {
     onNavigate(targetId);
-    setIsVisible(false);
+    // setIsVisible(false);
   };
 
   return (
