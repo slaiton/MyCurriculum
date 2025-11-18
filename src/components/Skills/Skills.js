@@ -44,7 +44,7 @@ function Skills({ onNavigate }) {
    useEffect(() => {
       const timer = setTimeout(() => {
          setCanNavigate(true);
-      }, 5000);
+      }, 2500);
 
       return () => clearTimeout(timer);
    }, []);
@@ -54,7 +54,7 @@ function Skills({ onNavigate }) {
    const handleScroll = (event) => {
       if (!canNavigate) return;
       if (event.deltaY > 0) {
-         onNavigate("#contact");
+         onNavigate("#experience");
       } else if (event.deltaY < 0) {
          onNavigate("#experience");
       }

@@ -92,7 +92,7 @@ function Contact({ onNavigate }) {
     if (event.deltaY > 0) {
 
     } else if (event.deltaY < 0) {
-      onNavigate("#skills");
+      onNavigate("#experience");
     }
   };
 

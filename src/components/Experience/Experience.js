@@ -73,6 +73,7 @@ function Experience({ onNavigate }) {
     }, []);
 
 
+
     const handleScroll = (event) => {
         if (!canNavigate) return;
         if (event.deltaY > 0) {
