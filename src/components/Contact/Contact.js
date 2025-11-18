@@ -81,7 +81,7 @@ function Contact({ onNavigate }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setCanNavigate(true);
-    }, 5000);
+    }, 2500);
 
     return () => clearTimeout(timer);
   }, []);
