@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import useScrollDirection from "../../hooks/useScroll";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useScroll from '../../hooks/useScrollDetection';
 import './Home.css';
@@ -16,7 +15,7 @@ function Home({ onNavigate }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setCanNavigate(true);
-    }, 2500);
+    }, 800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -47,7 +46,7 @@ function Home({ onNavigate }) {
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
 
-        <video src="../../assets/video/code.mp4" autoPlay loop muted />
+        <video src="/assets/video/code.mp4" autoPlay loop muted playsInline />
         <div className="overlay"></div>
 
       </motion.div>

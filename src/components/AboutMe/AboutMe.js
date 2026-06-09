@@ -24,7 +24,6 @@ const AnimatedNumber = ({ targetNumber }) => {
 };
 
 function AboutMe({ onNavigate }) {
-    const [isVisible, setIsVisible] = React.useState(true);
     const navigate = (hash) => {
         // Cambia el hash en la URL
         window.location.hash = hash;
@@ -38,7 +37,7 @@ function AboutMe({ onNavigate }) {
     useEffect(() => {
       const timer = setTimeout(() => {
         setCanNavigate(true);
-      }, 2500);
+      }, 800);
   
       return () => clearTimeout(timer);
     }, []);
@@ -58,7 +57,7 @@ function AboutMe({ onNavigate }) {
     return (
         <motion.section
             initial={{ y: '-100vh', opacity: 0 }}
-            animate={{ y: isVisible ? '0' : '-100vh', opacity: isVisible ? 1 : 0 }}
+            animate={{ y: '0', opacity: 1 }}
             exit={{ y: '-100vh', opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             id="aboutMe" className="about">

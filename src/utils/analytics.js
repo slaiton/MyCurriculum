@@ -1,10 +1,11 @@
 import ReactGA from "react-ga4";
 
-// Reemplaza con tu ID de medición de Google Analytics
-const GA_MEASUREMENT_ID = "G-M37SMVCR2B";
+const GA_MEASUREMENT_ID = process.env.REACT_APP_GA_MEASUREMENT_ID;
 
 export const initGA = () => {
-  ReactGA.initialize(GA_MEASUREMENT_ID);
+  if (GA_MEASUREMENT_ID) {
+    ReactGA.initialize(GA_MEASUREMENT_ID);
+  }
 };
 
 export const logPageView = () => {

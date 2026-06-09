@@ -6,30 +6,44 @@ import './Projects.css';
 const ProjectReview = ({ onNavigate }) => {
     const [canNavigate, setCanNavigate] = useState(false);
     const [repos, setRepos] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedRepo, setSelectedRepo] = useState(null);
 
     const projectsPerPage = 6;
 
+    useEffect(() => {
+        const timer = setTimeout(() => setCanNavigate(true), 800);
+        return () => clearTimeout(timer);
+    }, []);
+
     useScroll((event) => {
         if (!canNavigate) return;
         if (event.deltaY > 0) {
-            onNavigate("#experience");
-        } else if (event.deltaY < 0) {
             onNavigate("#contact");
+        } else if (event.deltaY < 0) {
+            onNavigate("#skills");
         }
     });
 
     useEffect(() => {
         fetch("https://api.github.com/users/slaiton/repos")
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+                return res.json();
+            })
             .then((data) => {
                 const filtered = data
                     .filter(repo => !repo.fork)
                     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
                 setRepos(filtered);
+                setLoading(false);
             })
-            .catch((error) => console.error("Error al obtener repositorios:", error));
+            .catch(() => {
+                setError(true);
+                setLoading(false);
+            });
     }, []);
 
     const getBannerUrl = (repo) =>
@@ -53,6 +67,29 @@ const ProjectReview = ({ onNavigate }) => {
     const handleBack = () => {
         setSelectedRepo(null);
     };
+
+    if (loading) {
+        return (
+            <div className="projects-wrapper">
+                <h1>Mis Proyectos</h1>
+                <p style={{ textAlign: 'center', color: '#aaa', marginTop: '2rem' }}>Cargando proyectos...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="projects-wrapper">
+                <h1>Mis Proyectos</h1>
+                <p style={{ textAlign: 'center', color: '#ff6b6b', marginTop: '2rem' }}>
+                    No se pudieron cargar los proyectos. Visita{' '}
+                    <a href="https://github.com/slaiton" target="_blank" rel="noopener noreferrer" style={{ color: '#ff2858' }}>
+                        github.com/slaiton
+                    </a>
+                </p>
+            </div>
+        );
+    }
 
     return (
         <div className="projects-wrapper">

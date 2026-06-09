@@ -2,11 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Experience.css';
 import { motion } from 'framer-motion';
 import useScroll from '../../hooks/useScrollDetection';
-import { useSpring, animated } from "@react-spring/web";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
 function Experience({ onNavigate }) {
-    const [isVisible, setIsVisible] = React.useState(true);
     const rowsPerPage = 4;
     const [currentPage, setCurrentPage] = useState(1);
     const [canNavigate, setCanNavigate] = useState(false);
@@ -67,7 +63,7 @@ function Experience({ onNavigate }) {
     useEffect(() => {
         const timer = setTimeout(() => {
             setCanNavigate(true);
-        }, 2500);
+        }, 800);
 
         return () => clearTimeout(timer);
     }, []);
@@ -88,7 +84,7 @@ function Experience({ onNavigate }) {
     return (
         <motion.section
             initial={{ y: '-100vh', opacity: 0 }}
-            animate={{ y: isVisible ? '0' : '-100vh', opacity: isVisible ? 1 : 0 }}
+            animate={{ y: '0', opacity: 1 }}
             exit={{ y: '-100vh', opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             id="experience" className="experience">

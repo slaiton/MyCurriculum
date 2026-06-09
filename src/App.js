@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import Header from './components/Header/Header';
 import Home from './components/Home/Home';
 import AboutMe from './components/AboutMe/AboutMe';
@@ -6,7 +7,6 @@ import Skills from './components/Skills/Skills';
 import Experience from './components/Experience/Experience';
 import ProjectReview from './components/Projects/Projects';
 import Contact from './components/Contact/Contact';
-import Footer from './components/Footer/Footer';
 import { initGA, logPageView } from "./utils/analytics";
 
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -36,7 +36,6 @@ function App() {
     logPageView()
 
     const handleMouseMove = (event) => {
-      console.log(event);
       setPosition({ x: event.clientX, y: event.clientY });
     };
 
@@ -53,6 +52,18 @@ function App() {
   };
 
   return (
+    <>
+      <Helmet>
+        <title>Stiven Laiton — Full Stack Developer</title>
+        <meta name="description" content="Portafolio de Jhoan Stiven Laiton, Ingeniero de Software Full Stack con 6+ años de experiencia en Laravel, React, Angular, Kotlin, AWS y Docker." />
+        <meta property="og:title" content="Stiven Laiton — Full Stack Developer" />
+        <meta property="og:description" content="Portafolio profesional: proyectos, experiencia y habilidades de un Full Stack Developer." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://slaiton.com" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Stiven Laiton — Full Stack Developer" />
+        <meta name="twitter:description" content="Portafolio profesional: proyectos, experiencia y habilidades de un Full Stack Developer." />
+      </Helmet>
     <div className="app">
       <div className="mouse-follower">
         <div
@@ -63,17 +74,15 @@ function App() {
         ></div>
       </div>
       <Header onNavigate={handleNavigate} />
-      <a
-        href="#"
+      <span
         className="floating-name"
         style={{ color: sectionColors[currentSection] || "#000" }}
         >
           Stiven Laiton
-
-      </a>
+      </span>
 
       <a 
-        href="../../assets/files/HV.pdf" 
+        href="/assets/files/HV.pdf"
         download 
         className="floating-button"
         title="Descargar CV"
@@ -88,8 +97,8 @@ function App() {
         {currentSection === "#contact" && <Contact onNavigate={handleNavigate} />}
         {currentSection === "#projects" && <ProjectReview onNavigate={handleNavigate} />}
       </div>
-      {/* <Footer /> */}
     </div>
+    </>
   );
 }
 
