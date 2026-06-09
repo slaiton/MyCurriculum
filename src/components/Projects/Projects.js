@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import './Projects.css';
 
 const ProjectReview = ({ onNavigate }) => {
-    const [canNavigate, setCanNavigate] = useState(false);
     const [repos, setRepos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -13,13 +12,7 @@ const ProjectReview = ({ onNavigate }) => {
 
     const projectsPerPage = 6;
 
-    useEffect(() => {
-        const timer = setTimeout(() => setCanNavigate(true), 800);
-        return () => clearTimeout(timer);
-    }, []);
-
     useScroll((event) => {
-        if (!canNavigate) return;
         if (event.deltaY > 0) {
             onNavigate("#contact");
         } else if (event.deltaY < 0) {

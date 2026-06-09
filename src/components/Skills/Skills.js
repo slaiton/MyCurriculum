@@ -21,19 +21,13 @@ const skills = [
 
 function Skills({ onNavigate }) {
    const [started, setStarted] = useState(false);
-   const [canNavigate, setCanNavigate] = useState(false);
 
    useEffect(() => {
-      const startTimer = setTimeout(() => setStarted(true), 100);
-      const navTimer = setTimeout(() => setCanNavigate(true), 800);
-      return () => {
-         clearTimeout(startTimer);
-         clearTimeout(navTimer);
-      };
+      const t = setTimeout(() => setStarted(true), 100);
+      return () => clearTimeout(t);
    }, []);
 
    const handleScroll = (event) => {
-      if (!canNavigate) return;
       if (event.deltaY > 0) {
          onNavigate("#projects");
       } else if (event.deltaY < 0) {

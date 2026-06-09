@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useScroll from '../../hooks/useScrollDetection';
@@ -8,7 +8,6 @@ import '../../styles/fonts.css';
 import './Contact.css';
 
 function Contact({ onNavigate }) {
-  const [canNavigate, setCanNavigate] = useState(false);
   const [status, setStatus] = useState('idle');
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -60,13 +59,7 @@ function Contact({ onNavigate }) {
     }
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => setCanNavigate(true), 800);
-    return () => clearTimeout(timer);
-  }, []);
-
   const handleScroll = (event) => {
-    if (!canNavigate) return;
     if (event.deltaY < 0) onNavigate('#projects');
   };
 

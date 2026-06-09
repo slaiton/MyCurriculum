@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import useScroll from '../../hooks/useScrollDetection';
 import { useSpring, animated } from "@react-spring/web";
 import './AboutMe.css';
 
-
 const AnimatedNumber = ({ targetNumber }) => {
-    
     const { number } = useSpring({
         from: { number: 0 },
         to: { number: targetNumber },
@@ -14,7 +12,7 @@ const AnimatedNumber = ({ targetNumber }) => {
     });
 
     return (
-        <div className='d-flex  justify-content-center align-center'>
+        <div className='d-flex justify-content-center align-center'>
             <h1> + </h1>
             <animated.h1>
                 {number.to((value) => value.toFixed(0))}
@@ -25,31 +23,13 @@ const AnimatedNumber = ({ targetNumber }) => {
 
 function AboutMe({ onNavigate }) {
     const navigate = (hash) => {
-        // Cambia el hash en la URL
         window.location.hash = hash;
-
-        onNavigate(hash)
+        onNavigate(hash);
     };
-    const [canNavigate, setCanNavigate] = useState(false);
 
-
-
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setCanNavigate(true);
-      }, 800);
-  
-      return () => clearTimeout(timer);
-    }, []);
-
-  
     const handleScroll = (event) => {
-      if (!canNavigate) return; 
-        if (event.deltaY > 0) {
-            navigate("#experience");
-        } else if (event.deltaY < 0) {
-            navigate("#home");
-        }
+        if (event.deltaY > 0) navigate('#experience');
+        else if (event.deltaY < 0) navigate('#home');
     };
 
     useScroll(handleScroll);
@@ -61,10 +41,7 @@ function AboutMe({ onNavigate }) {
             exit={{ y: '-100vh', opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             id="aboutMe" className="about">
-            <div
-                className="profile"
-            >
-
+            <div className="profile">
                 <div className='profile-container'>
                     <div className="profile-image"></div>
                     <div className="profile-description">
@@ -85,17 +62,12 @@ function AboutMe({ onNavigate }) {
                 </div>
 
                 <div className='profile-expirence'>
-
                     <div className='years-expirence'>
                         <AnimatedNumber targetNumber={6} />
-                        <span>
-                            años de experiencia trabajando en
-                        </span>
+                        <span>años de experiencia trabajando en</span>
                     </div>
 
-
                     <div className="profile-grid">
-    
                         <div className="grid-item">
                             <h3>Frontend</h3>
                             <p>
@@ -124,7 +96,6 @@ function AboutMe({ onNavigate }) {
                                 AWS.
                             </p>
                         </div>
-                        
                     </div>
                 </div>
             </div>
