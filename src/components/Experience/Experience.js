@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import './Experience.css';
 import { motion } from 'framer-motion';
 import useScroll from '../../hooks/useScrollDetection';
+import useStrapi from '../../hooks/useStrapi';
 
-const data = [
+const FALLBACK = [
     {
       jobTitle: 'Analista de software',
       company: 'Aldia Logistica',
@@ -42,16 +43,14 @@ function Experience({ onNavigate }) {
     const rowsPerPage = 4;
     const [currentPage, setCurrentPage] = useState(1);
 
+    const strapiData = useStrapi('experiences?sort=order:asc&pagination[pageSize]=50');
+    const data = strapiData || FALLBACK;
+
     const totalPages = Math.ceil(data.length / rowsPerPage);
     const currentData = data.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
-    const handleNext = () => {
-        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-    };
-
-    const handlePrev = () => {
-        if (currentPage > 1) setCurrentPage(currentPage - 1);
-    };
+    const handleNext = () => { if (currentPage < totalPages) setCurrentPage(currentPage + 1); };
+    const handlePrev = () => { if (currentPage > 1) setCurrentPage(currentPage - 1); };
 
     const handleScroll = (event) => {
         if (event.deltaY > 0) onNavigate('#skills');

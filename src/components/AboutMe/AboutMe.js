@@ -1,8 +1,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import useScroll from '../../hooks/useScrollDetection';
+import useStrapi from '../../hooks/useStrapi';
 import { useSpring, animated } from "@react-spring/web";
 import './AboutMe.css';
+
+const FALLBACK_BIO = `Ingeniero de Software Full Stack con habilidades para
+desarrollar soluciones tecnológicas innovadoras y a medida,
+con un enfoque en la optimización de procesos y la creación
+de aplicaciones robustas y eficientes. Soy una persona
+proactiva, creativa y orientada a cumplir con los objetivos de la
+empresa, adaptándome rápidamente a los cambios del
+entorno. Destaco por mi capacidad para trabajar en equipo y
+establecer relaciones interpersonales constructivas, así como
+por mi facilidad para aprender nuevas tecnologías y enfrentar
+desafíos técnicos con iniciativa.`;
 
 const AnimatedNumber = ({ targetNumber }) => {
     const { number } = useSpring({
@@ -14,14 +26,17 @@ const AnimatedNumber = ({ targetNumber }) => {
     return (
         <div className='d-flex justify-content-center align-center'>
             <h1> + </h1>
-            <animated.h1>
-                {number.to((value) => value.toFixed(0))}
-            </animated.h1>
+            <animated.h1>{number.to((v) => v.toFixed(0))}</animated.h1>
         </div>
     );
 };
 
 function AboutMe({ onNavigate }) {
+    const strapiData = useStrapi('about-me');
+
+    const bio = strapiData?.bio || FALLBACK_BIO;
+    const yearsExp = strapiData?.yearsExperience ?? 6;
+
     const navigate = (hash) => {
         window.location.hash = hash;
         onNavigate(hash);
@@ -46,55 +61,32 @@ function AboutMe({ onNavigate }) {
                     <div className="profile-image"></div>
                     <div className="profile-description">
                         <h2>Sobre mí</h2>
-                        <p>
-                            Ingeniero de Software Full Stack con habilidades para
-                            desarrollar soluciones tecnológicas innovadoras y a medida,
-                            con un enfoque en la optimización de procesos y la creación
-                            de aplicaciones robustas y eficientes. Soy una persona
-                            proactiva, creativa y orientada a cumplir con los objetivos de la
-                            empresa, adaptándome rápidamente a los cambios del
-                            entorno. Destaco por mi capacidad para trabajar en equipo y
-                            establecer relaciones interpersonales constructivas, así como
-                            por mi facilidad para aprender nuevas tecnologías y enfrentar
-                            desafíos técnicos con iniciativa.
-                        </p>
+                        <p>{bio}</p>
                     </div>
                 </div>
 
                 <div className='profile-expirence'>
                     <div className='years-expirence'>
-                        <AnimatedNumber targetNumber={6} />
+                        <AnimatedNumber targetNumber={yearsExp} />
                         <span>años de experiencia trabajando en</span>
                     </div>
 
                     <div className="profile-grid">
                         <div className="grid-item">
                             <h3>Frontend</h3>
-                            <p>
-                                Experiencia con React, Angular y creación de interfaces de usuario
-                                dinámicas y responsivas.
-                            </p>
+                            <p>Experiencia con React, Angular y creación de interfaces de usuario dinámicas y responsivas.</p>
                         </div>
                         <div className="grid-item">
                             <h3>Backend</h3>
-                            <p>
-                                Diseño y construcción de APIs RESTful utilizando Node.js, Express y
-                                Laravel.
-                            </p>
+                            <p>Diseño y construcción de APIs RESTful utilizando Node.js, Express y Laravel.</p>
                         </div>
                         <div className="grid-item">
                             <h3>Bases de Datos</h3>
-                            <p>
-                                Gestión y optimización de bases de datos relacionales (PostgreSQL,
-                                MySQL) y no relacionales (MongoDB).
-                            </p>
+                            <p>Gestión y optimización de bases de datos relacionales (PostgreSQL, MySQL) y no relacionales (MongoDB).</p>
                         </div>
                         <div className="grid-item">
                             <h3>DevOps</h3>
-                            <p>
-                                Implementación de entornos con Docker, CI/CD, y manejo de servidores en
-                                AWS.
-                            </p>
+                            <p>Implementación de entornos con Docker, CI/CD, y manejo de servidores en AWS.</p>
                         </div>
                     </div>
                 </div>

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import useScroll from '../../hooks/useScrollDetection';
+import useStrapi from '../../hooks/useStrapi';
 import './Skills.css';
 
-const skills = [
+const FALLBACK = [
    { name: "PHP", percentage: 95 },
    { name: "JavaScript", percentage: 90 },
    { name: "C#", percentage: 65 },
@@ -22,17 +23,18 @@ const skills = [
 function Skills({ onNavigate }) {
    const [started, setStarted] = useState(false);
 
+   const strapiData = useStrapi('skills?sort=order:asc&pagination[pageSize]=50');
+   const skills = strapiData || FALLBACK;
+
    useEffect(() => {
+      setStarted(false);
       const t = setTimeout(() => setStarted(true), 100);
       return () => clearTimeout(t);
-   }, []);
+   }, [skills]);
 
    const handleScroll = (event) => {
-      if (event.deltaY > 0) {
-         onNavigate("#projects");
-      } else if (event.deltaY < 0) {
-         onNavigate("#experience");
-      }
+      if (event.deltaY > 0) onNavigate('#projects');
+      else if (event.deltaY < 0) onNavigate('#experience');
    };
 
    useScroll(handleScroll);
