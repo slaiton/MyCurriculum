@@ -1,0 +1,10 @@
+{
+  "collectionName": "components_content_images",
+  "info": { "displayName": "Imagen destacada en el cuerpo", "icon": "picture", "description": "Imagen grande con pie de foto y marco de navegador opcional" },
+  "options": {},
+  "attributes": {
+    "image": { "type": "media", "multiple": false, "required": true, "allowedTypes": ["images"] },
+    "caption": { "type": "string", "maxLength": 200 },
+    "browserFrame": { "type": "boolean", "default": false }
+  }
+}

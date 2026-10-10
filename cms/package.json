@@ -2,7 +2,7 @@
   "name": "cms",
   "version": "0.1.0",
   "private": true,
-  "description": "A Strapi application",
+  "description": "CMS de slaiton.com (Strapi 5)",
   "scripts": {
     "build": "strapi build",
     "console": "strapi console",
@@ -15,10 +15,10 @@
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
   "dependencies": {
-    "@strapi/plugin-cloud": "5.47.1",
-    "@strapi/plugin-users-permissions": "5.47.1",
-    "@strapi/strapi": "5.47.1",
+    "@strapi/plugin-users-permissions": "5.57.0",
+    "@strapi/strapi": "5.57.0",
     "better-sqlite3": "12.8.0",
+    "pg": "8.23.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
@@ -37,5 +37,12 @@
   "strapi": {
     "uuid": "c6171e1d-03f1-4bb5-9153-3fa9568f4e39",
     "installId": "1d4c285ee9e938e4090348fd0a3a3dff6bb670fccab547feb6e221319b9d2372"
+  },
+  "allowScripts": {
+    "esbuild@0.27.7": true,
+    "esbuild@0.28.2": true,
+    "esbuild@0.25.12": true,
+    "@swc/core@1.16.13": true,
+    "better-sqlite3@12.8.0": true
   }
 }

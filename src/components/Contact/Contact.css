@@ -98,7 +98,7 @@
   }
   
   .submit-button {
-    background: #007BFF;
+    background: #25D366;
     color: #fff;
     border: none;
     padding: 10px 15px;
@@ -109,7 +109,7 @@
   }
   
   .submit-button:hover {
-    background: #0056b3;
+    background: #1da851;
   }
 
 .field-error {
@@ -117,15 +117,6 @@
   font-size: 0.8rem;
   margin: 4px 0 0;
 }
-
-.form-feedback {
-  text-align: center;
-  margin-top: 0.5rem;
-  font-size: 0.95rem;
-}
-
-.form-feedback.success { color: #6BCB77; }
-.form-feedback.error   { color: #ff6b6b; }
 
 @media (max-width: 768px) {
   .contact {

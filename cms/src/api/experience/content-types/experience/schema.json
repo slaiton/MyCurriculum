@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "experiences",
+  "info": {
+    "singularName": "experience",
+    "pluralName": "experiences",
+    "displayName": "Experiencia",
+    "description": "Trayectoria laboral (fin vacío = actual)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "jobTitle": {
+      "type": "string",
+      "required": true
+    },
+    "company": {
+      "type": "string"
+    },
+    "startDate": {
+      "type": "date",
+      "required": true
+    },
+    "endDate": {
+      "type": "date"
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    }
+  },
+  "pluginOptions": {}
+}

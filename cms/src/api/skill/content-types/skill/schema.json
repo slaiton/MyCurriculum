@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "skills",
+  "info": {
+    "singularName": "skill",
+    "pluralName": "skills",
+    "displayName": "Habilidad",
+    "description": "Tecnologías y nivel (0-100)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "level": {
+      "type": "integer",
+      "required": true,
+      "min": 0,
+      "max": 100
+    }
+  },
+  "pluginOptions": {}
+}

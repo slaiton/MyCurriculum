@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useScroll from '../../hooks/useScrollDetection';
 import useStrapi from '../../hooks/useStrapi';
-import { sendEmail } from '../../api/api';
 
 import '../../styles/fonts.css';
 import './Contact.css';
@@ -11,14 +10,14 @@ import './Contact.css';
 const FALLBACK_CONTACT = {
   email: 'jstivenlaiton@gmail.com',
   phone: '+57 304 641 5909',
+  whatsapp: '573046415909',
   linkedinUrl: 'https://www.linkedin.com/in/stiven-laiton-3020a615a/',
   githubUrl: 'https://github.com/slaiton',
 };
 
 function Contact({ onNavigate }) {
-  const [status, setStatus] = useState('idle');
   const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState({ name: '', message: '' });
 
   const strapiData = useStrapi('contact-info');
   const contact = {
@@ -26,7 +25,11 @@ function Contact({ onNavigate }) {
     phone:       strapiData?.phone       || FALLBACK_CONTACT.phone,
     linkedinUrl: strapiData?.linkedinUrl || FALLBACK_CONTACT.linkedinUrl,
     githubUrl:   strapiData?.githubUrl   || FALLBACK_CONTACT.githubUrl,
+    whatsapp:   (strapiData?.whatsapp    || FALLBACK_CONTACT.whatsapp).replace(/\D/g, ''),
   };
+
+  const buildWhatsAppUrl = (text) =>
+    `https://wa.me/${contact.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
 
   const handleIconClick = (url) => window.open(url, '_blank', 'noopener,noreferrer');
 
@@ -38,32 +41,17 @@ function Contact({ onNavigate }) {
   const validate = () => {
     const errs = {};
     if (!formData.name.trim()) errs.name = 'El nombre es obligatorio.';
-    if (!formData.email.trim()) {
-      errs.email = 'El correo es obligatorio.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errs.email = 'El correo no es válido.';
-    }
     if (!formData.message.trim()) errs.message = 'El mensaje es obligatorio.';
     return errs;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
     setErrors({});
-    setStatus('sending');
-    try {
-      await sendEmail({
-        to: contact.email,
-        subject: `Contacto de ${formData.name}`,
-        text: `De: ${formData.name} (${formData.email})\n\n${formData.message}`,
-      });
-      setStatus('success');
-      setFormData({ name: '', email: '', message: '' });
-    } catch {
-      setStatus('error');
-    }
+    const text = `Hola Stiven, soy ${formData.name.trim()}.\n\n${formData.message.trim()}`;
+    window.open(buildWhatsAppUrl(text), '_blank', 'noopener,noreferrer');
   };
 
   const handleScroll = (event) => {
@@ -93,7 +81,7 @@ function Contact({ onNavigate }) {
             📧 <a href={`mailto:${contact.email}`} style={{ color: 'white', textDecoration: 'none' }}>{contact.email}</a>
           </motion.li>
           <motion.li whileHover={{ scale: 1.1 }}>
-            📱 {contact.phone}
+            📱 <a href={buildWhatsAppUrl()} target="_blank" rel="noopener noreferrer" style={{ color: 'white', textDecoration: 'none' }}>{contact.phone}</a>
           </motion.li>
         </ul>
 
@@ -106,22 +94,14 @@ function Contact({ onNavigate }) {
             </div>
 
             <div className="form-group">
-              <input type="email" id="email" name="email" placeholder=" " value={formData.email} onChange={handleChange} />
-              <label htmlFor="email">Correo Electrónico</label>
-              {errors.email && <p className="field-error">{errors.email}</p>}
-            </div>
-
-            <div className="form-group">
               <textarea id="message" name="message" rows="4" placeholder=" " value={formData.message} onChange={handleChange} />
               <label htmlFor="message">Mensaje</label>
               {errors.message && <p className="field-error">{errors.message}</p>}
             </div>
 
-            <button type="submit" className="submit-button" disabled={status === 'sending'}>
-              {status === 'sending' ? 'Enviando...' : 'Enviar'}
+            <button type="submit" className="submit-button">
+              Enviar por WhatsApp
             </button>
-            {status === 'success' && <p className="form-feedback success">¡Mensaje enviado correctamente!</p>}
-            {status === 'error'   && <p className="form-feedback error">Error al enviar. Intenta de nuevo.</p>}
           </form>
         </div>
 
@@ -131,6 +111,9 @@ function Contact({ onNavigate }) {
           </span>
           <span className="social-icon github" onClick={() => handleIconClick(contact.githubUrl)} aria-label="GitHub">
             <FontAwesomeIcon icon={['fab', 'github']} />
+          </span>
+          <span className="social-icon whatsapp" onClick={() => handleIconClick(buildWhatsAppUrl())} aria-label="WhatsApp">
+            <FontAwesomeIcon icon={['fab', 'whatsapp']} />
           </span>
         </div>
       </motion.div>

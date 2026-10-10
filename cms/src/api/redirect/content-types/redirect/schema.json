@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "redirects",
+  "info": {
+    "singularName": "redirect",
+    "pluralName": "redirects",
+    "displayName": "Redirección",
+    "description": "URLs antiguas → nuevas (se crean solas al cambiar un slug)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "from": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "regex": "^/[a-z0-9/-]*$"
+    },
+    "to": {
+      "type": "string",
+      "required": true,
+      "regex": "^/[a-z0-9/?=&-]*$"
+    }
+  },
+  "pluginOptions": {}
+}

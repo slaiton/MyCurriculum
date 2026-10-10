@@ -1,0 +1,125 @@
+# Fase 2: fundamentos (implementado)
+
+> Fecha: 2026-10-10 · Estado: **listo para revisión. Nada desplegado; sin commits.**
+> La app CRA actual (raíz del repo) sigue intacta, salvo el cambio pendiente de WhatsApp (ver §7).
+
+## 1. Qué se construyó
+
+| Carpeta | Contenido |
+|---|---|
+| `web/` | Sitio nuevo: Next.js 16.4 (App Router, TypeScript), React 19.3. Sin librerías de UI ni de animación. |
+| `cms/` | Strapi actualizado de 5.47.1 a **5.57.0**, con 8 tipos de contenido, 4 componentes, publicación programada, redirecciones automáticas, vista previa y contenido inicial. |
+| `infra/` | Docker Compose (PostgreSQL 17 + CMS + sitio + Caddy opcional), configuración de Nginx alternativa, scripts de despliegue, backup y restauración, y guía de despliegue. |
+| `.github/workflows/deploy-server.yml` | Despliegue manual por SSH (no reemplaza todavía a `web.yml`). |
+| `docs/` | Esta fase, la guía de publicación y las fases anteriores. |
+
+## 2. Decisiones técnicas tomadas durante la implementación
+
+| Decisión | Motivo |
+|---|---|
+| **Renderizador propio del formato Blocks** (`web/src/components/Body.tsx`) en lugar de `@strapi/blocks-react-renderer` | La versión 1.0.2 de ese paquete tiene un `postinstall` roto (`husky install`). El formato es JSON simple, y hacía falta controlar los `id` de los títulos (tabla de contenido) y el bloque de código con botón de copiar. Nunca inserta HTML crudo, lo que elimina el XSS por contenido. |
+| **Cuerpo como "dynamic zone"** con *Texto* (Blocks), *Video* e *Imagen* | El editor Blocks no admite video; así el autor puede intercalar videos (archivo o YouTube con carga diferida) y capturas con marco de navegador. |
+| **API del CMS privada + token de solo lectura** | Next lee el CMS desde el servidor; el token nunca llega al navegador. Sin permisos públicos en Strapi. |
+| **Datos de respaldo** (`web/src/lib/fallback.ts`) | Si el CMS no responde, el sitio muestra el contenido real actual; nunca queda en blanco. |
+| **Publicación programada con cron propio** (`cms/config/cron-tasks.ts`) | *Releases* de Strapi es de pago. Cada minuto publica los borradores con `scheduledAt` vencido. |
+| **Redirección automática al cambiar el slug** (`cms/src/index.ts`) | Un middleware del Document Service crea la redirección y evita cadenas. Next responde 308 permanente. |
+| **Validación al publicar**: la portada exige texto alternativo | Accesibilidad y SEO de imágenes. |
+| **Colores por categoría** (6) desde el CMS | Amplía la paleta (heredada de los colores de sección del sitio actual) y da identidad a cada tema. |
+| **npm fijado en 11.16.0 dentro de Docker** y `allowScripts` en `cms/package.json` | Los lockfiles se generaron con npm 11, que además bloquea los scripts de instalación por defecto. Solo se aprobaron los necesarios: `@swc/core`, `esbuild` y `better-sqlite3`. |
+| **PostgreSQL 17 y Node 22** en Docker | Recomendación vigente de la documentación de Strapi (soporta Node 22/24/26). |
+
+## 3. Rutas
+
+**Públicas**
+
+| Ruta | Render | Indexable |
+|---|---|---|
+| `/` | Estática + revalidación | Sí |
+| `/blog`, `/blog?page=N` | Por petición (con caché de datos) | Sí (canonical propio por página) |
+| `/blog/[slug]` | Pre-generada (SSG) + revalidación | Sí, salvo `noIndex` |
+| `/blog/categoria/[slug]` | Por petición | Sí |
+| `/blog/etiqueta/[slug]` | Por petición | No (`noindex, follow`) |
+| `/buscar?q=` | Por petición | No |
+| `/proyectos`, `/proyectos/[slug]` | Estática / SSG | Sí |
+| `/sobre-mi`, `/contacto` | Estática | Sí |
+| `/assets/files/HV.pdf` | Archivo (ruta conservada) | — |
+| `/sitemap.xml`, `/robots.txt` | Generados | — |
+| 404 | Página propia | — |
+
+**Internas:** `POST /api/revalidate` (header `x-revalidate-secret`) y `GET /api/preview` (parámetro `secret`). Ambas validan el secreto en tiempo constante.
+**Administración:** `https://cms.slaiton.com/admin`.
+
+## 4. Modelo de datos (Strapi)
+
+| Tipo | Clase | Borradores | Campos clave |
+|---|---|---|---|
+| Publicación (`post`) | colección | Sí | title, slug (uid), excerpt, body (dynamic zone), cover, category, tags, featured, scheduledAt, contentUpdatedAt, seo |
+| Categoría | colección | No | name (único), slug, description, color (enum de 6), seo |
+| Etiqueta | colección | No | name (único), slug |
+| Proyecto | colección | Sí | title, slug, summary, body, cover, url, repoUrl, stack (JSON), color, order, seo |
+| Experiencia | colección | No | jobTitle, company, startDate, endDate (vacío = actual), description |
+| Habilidad | colección | No | name (único), level 0–100 |
+| Ajustes del sitio | single | No | name, role, bio, careerStartDate, whatsapp, email, redes, cv, heroVideo, seo |
+| Redirección | colección | No | from (único), to |
+
+Componentes: `shared.seo`, `content.rich-text`, `content.video`, `content.image`.
+
+**Migraciones:** Strapi sincroniza el esquema desde los JSON de `cms/src/api/**` al arrancar. La base de producción
+empezará vacía, así que no hay riesgo de pérdida. Para revertir se revierten esos archivos. En producción solo se harán cambios **aditivos**,
+porque quitar un campo borra sus datos.
+
+## 5. Pruebas ejecutadas (2026-10-10, en local)
+
+| Prueba | Resultado |
+|---|---|
+| `next build` (tipos + build de producción) | ✅ Sin errores. |
+| Rutas con datos de respaldo (16 rutas, 404 y archivos) | ✅ Códigos correctos (200 / 404). |
+| Strapi 5.57 arranca con los esquemas y siembra el contenido inicial | ✅ |
+| API del CMS sin token / con token de solo lectura | ✅ 403 / 200 |
+| Sitio leyendo del CMS real: inicio, blog, artículo, categoría, proyectos, perfil | ✅ 200 con datos del CMS |
+| Artículo: ids de títulos, tabla de contenido con subniveles, bloque de código, video, BlogPosting + BreadcrumbList, canonical, Open Graph | ✅ |
+| Cambio de slug → redirección creada en el CMS → 308 en el sitio | ✅ `/blog/prueba-flujo` → `/blog/prueba-flujo-editorial` |
+| Publicación programada (cron cada minuto) | ✅ Publicó el borrador vencido en el siguiente minuto. |
+| `POST /api/revalidate` sin secreto / con secreto | ✅ 401 / 200 (invalida `posts` y `post:<slug>`) |
+| `GET /api/preview` con secreto / slug manipulado / tipo desconocido | ✅ 307 + cookie de borrador / 400 / 400 |
+| `robots.txt` fuera de producción | ✅ `Disallow: /` (el subdominio de pruebas no se indexa) |
+| Móvil 375 px: desbordamiento horizontal en 6 páginas | ✅ Ninguno; el menú móvil aparece. |
+| Aparición progresiva: el contenido termina visible | ✅ |
+| Build de imágenes Docker `web` y `cms` | ✅ |
+| `docker compose config` y sintaxis de los scripts | ✅ |
+| Stack completo en Docker (PostgreSQL + CMS + sitio) | ⚠️ **No completado**: Docker Desktop local dejó de responder (error 500 del motor) tras los builds. Se valida en el subdominio de pruebas del servidor. |
+
+**No medido todavía:** Core Web Vitals (LCP, INP, CLS) con datos reales. Se medirán en el subdominio de pruebas
+con PageSpeed Insights y, tras el lanzamiento, con los datos de campo de Search Console. No hay pruebas automatizadas
+(unitarias o e2e): está pendiente para la Fase 6.
+
+Los datos de prueba (artículos "Prueba local…") existen solo en la base SQLite local (`cms/.tmp/`, ignorada por git).
+
+## 6. Desarrollo local
+
+```bash
+# CMS (http://localhost:1337/admin)
+cd cms && cp .env.example .env   # completa los secretos
+npm install && npm run develop
+
+# Sitio (http://localhost:3100)
+cd web && cp .env.example .env.local   # CMS_URL=http://localhost:1337, CMS_TOKEN=<token de solo lectura>
+npm install && npm run dev -- -p 3100
+```
+
+- Sin CMS, el sitio funciona con los datos de respaldo; con `DEMO_CONTENT=true` muestra artículos de ejemplo.
+- En Windows, si Strapi muestra `ERR_SWC_NATIVE_CACHE`, define `SWC_NATIVE_BINDING_CACHE=<ruta>/cms/.swc-cache`.
+- Usa **Node 22 LTS** en local. Strapi ya no da soporte oficial a Node 20, aunque arranca.
+
+## 7. Pendiente y riesgos
+
+| Tema | Estado |
+|---|---|
+| Cambio de WhatsApp en la app CRA y `git rm` de `src/api/api.js` y `src/config.js` en el stage | **Decisión tuya** (ver la guía de git). |
+| Datos del servidor (SO, RAM, ¿Nginx existente?) | Requeridos antes de desplegar (ver `infra/README.md`). |
+| Tema visual del panel de Strapi (logo y colores) | Fase 4. |
+| Video de fondo del inicio | Hay que comprimirlo (el actual pesa 9.7 MB) y subirlo en *Ajustes del sitio → heroVideo*. Sin video, se muestra una ilustración de código. |
+| Analítica (GA4) | Solo se carga si se define `NEXT_PUBLIC_GA_ID`. Falta decidir el aviso de cookies. |
+| Resaltado de sintaxis en bloques de código | Opcional (Fase 5). |
+| Retiro de la app CRA, de `build/` versionado y de `web.yml` | Después del corte y con tu aprobación. |
+| Datos de experiencia con fechas solapadas | Contenido; se corrige desde el panel. |

@@ -1,0 +1,12 @@
+{
+  "collectionName": "components_shared_seos",
+  "info": { "displayName": "SEO", "icon": "search", "description": "Metadatos para buscadores y redes sociales" },
+  "options": {},
+  "attributes": {
+    "metaTitle": { "type": "string", "maxLength": 60 },
+    "metaDescription": { "type": "text", "maxLength": 160 },
+    "canonicalUrl": { "type": "string" },
+    "noIndex": { "type": "boolean", "default": false },
+    "ogImage": { "type": "media", "multiple": false, "allowedTypes": ["images"] }
+  }
+}

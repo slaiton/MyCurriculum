@@ -1,0 +1,18 @@
+# Certificados HTTPS automáticos. Los dominios vienen de infra/.env.
+{$SITE_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy web:3000
+}
+
+# slaiton.com (sin www) → www, permanente
+slaiton.com {
+	redir https://{$SITE_DOMAIN}{uri} permanent
+}
+
+{$CMS_DOMAIN} {
+	encode zstd gzip
+	request_body {
+		max_size 100MB
+	}
+	reverse_proxy cms:1337
+}

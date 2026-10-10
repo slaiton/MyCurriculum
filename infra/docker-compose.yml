@@ -1,0 +1,105 @@
+# slaiton.com en un solo servidor: sitio (Next.js) + CMS (Strapi) + PostgreSQL (+ proxy HTTPS opcional).
+# Uso: copia .env.example a .env, complétalo y ejecuta scripts/deploy.sh (ver infra/README.md).
+name: slaiton
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  cms:
+    build: ../cms
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      HOST: 0.0.0.0
+      PORT: 1337
+      PUBLIC_URL: ${CMS_PUBLIC_URL}
+      IS_PROXIED: "true"
+      CORS_ORIGINS: ${CMS_PUBLIC_URL},${SITE_URL}
+      APP_KEYS: ${APP_KEYS}
+      API_TOKEN_SALT: ${API_TOKEN_SALT}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT}
+      JWT_SECRET: ${JWT_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_SSL: "false"
+      CLIENT_URL: ${SITE_URL}
+      PREVIEW_SECRET: ${PREVIEW_SECRET}
+    volumes:
+      - uploads:/opt/app/public/uploads
+    # Solo escucha en localhost: el acceso público pasa por el proxy (Caddy o Nginx del servidor).
+    ports:
+      - "127.0.0.1:${CMS_PORT:-1337}:1337"
+
+  web:
+    build:
+      context: ../web
+      args:
+        SITE_URL: ${SITE_URL}
+        CMS_URL: ${CMS_PUBLIC_URL}
+        CMS_PUBLIC_URL: ${CMS_PUBLIC_URL}
+        NEXT_PUBLIC_GA_ID: ${NEXT_PUBLIC_GA_ID:-}
+      secrets:
+        - cms_token
+    restart: unless-stopped
+    depends_on:
+      - cms
+    environment:
+      SITE_URL: ${SITE_URL}
+      CMS_URL: http://cms:1337
+      CMS_PUBLIC_URL: ${CMS_PUBLIC_URL}
+      CMS_TOKEN: ${CMS_TOKEN}
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET}
+      PREVIEW_SECRET: ${PREVIEW_SECRET}
+    ports:
+      - "127.0.0.1:${WEB_PORT:-3000}:3000"
+
+  # Proxy HTTPS con certificados automáticos (Let's Encrypt). Actívalo con: --profile proxy
+  # Si el servidor ya tiene Nginx en los puertos 80/443, NO lo actives y usa los archivos de infra/nginx/.
+  caddy:
+    image: caddy:2-alpine
+    profiles: ["proxy"]
+    restart: unless-stopped
+    depends_on:
+      - web
+      - cms
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN}
+      CMS_DOMAIN: ${CMS_DOMAIN}
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+secrets:
+  cms_token:
+    environment: CMS_TOKEN
+
+volumes:
+  pgdata:
+  uploads:
+  caddy_data:
+  caddy_config:

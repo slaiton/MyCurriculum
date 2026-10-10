@@ -1,0 +1,8 @@
+{
+  "collectionName": "components_content_rich_texts",
+  "info": { "displayName": "Texto", "icon": "paragraph", "description": "Títulos, párrafos, listas, enlaces, citas, código e imágenes" },
+  "options": {},
+  "attributes": {
+    "content": { "type": "blocks", "required": true }
+  }
+}

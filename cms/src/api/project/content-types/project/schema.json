@@ -1,0 +1,77 @@
+{
+  "kind": "collectionType",
+  "collectionName": "projects",
+  "info": {
+    "singularName": "project",
+    "pluralName": "projects",
+    "displayName": "Proyecto",
+    "description": "Proyectos en producción y casos de estudio"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 80
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "summary": {
+      "type": "text",
+      "required": true,
+      "maxLength": 200
+    },
+    "body": {
+      "type": "dynamiczone",
+      "components": [
+        "content.rich-text",
+        "content.video",
+        "content.image"
+      ]
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "url": {
+      "type": "string"
+    },
+    "repoUrl": {
+      "type": "string"
+    },
+    "stack": {
+      "type": "json"
+    },
+    "color": {
+      "type": "enumeration",
+      "enum": [
+        "violet",
+        "amber",
+        "coral",
+        "green",
+        "teal",
+        "blue"
+      ],
+      "default": "teal",
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    },
+    "seo": {
+      "type": "component",
+      "component": "shared.seo",
+      "repeatable": false
+    }
+  },
+  "pluginOptions": {}
+}

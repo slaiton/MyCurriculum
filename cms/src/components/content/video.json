@@ -1,0 +1,10 @@
+{
+  "collectionName": "components_content_videos",
+  "info": { "displayName": "Video", "icon": "play", "description": "Video subido (MP4/WebM) o enlace de YouTube" },
+  "options": {},
+  "attributes": {
+    "file": { "type": "media", "multiple": false, "allowedTypes": ["videos"] },
+    "youtubeUrl": { "type": "string" },
+    "caption": { "type": "string", "maxLength": 200 }
+  }
+}

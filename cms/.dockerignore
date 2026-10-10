@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+.tmp
+.cache
+.strapi
+.swc-cache
+.env
+public/uploads/*
+!public/uploads/.gitkeep

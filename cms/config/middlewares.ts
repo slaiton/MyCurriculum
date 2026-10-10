@@ -1,13 +1,26 @@
 import type { Core } from '@strapi/strapi';
 
-const config: Core.Config.Middlewares = [
+const MAX_UPLOAD = 100 * 1024 * 1024;
+
+const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Middlewares => [
   'strapi::logger',
   'strapi::errors',
   'strapi::security',
-  'strapi::cors',
+  {
+    name: 'strapi::cors',
+    config: {
+      // El sitio lee el CMS desde el servidor; solo el propio sitio y el panel necesitan CORS.
+      origin: env.array('CORS_ORIGINS', ['http://localhost:1337', 'http://localhost:3100']),
+    },
+  },
   'strapi::poweredBy',
   'strapi::query',
-  'strapi::body',
+  {
+    name: 'strapi::body',
+    config: {
+      formidable: { maxFileSize: MAX_UPLOAD },
+    },
+  },
   'strapi::session',
   'strapi::favicon',
   'strapi::public',

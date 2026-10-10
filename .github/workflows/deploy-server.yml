@@ -1,0 +1,33 @@
+# Despliegue del sitio nuevo (Next.js + Strapi) en el servidor propio.
+# MANUAL por ahora (Actions > "Deploy servidor" > Run workflow). Cuando el sitio nuevo esté
+# en producción se puede cambiar a "push: branches: [main]" y retirar web.yml (despliegue antiguo).
+#
+# Secrets requeridos (Settings > Secrets and variables > Actions):
+#   SERVER_HOST, SERVER_USERNAME, SSH_PRIVATE_KEY  (ya existen para web.yml)
+#   SERVER_KNOWN_HOSTS   salida de: ssh-keyscan -H <tu-servidor>
+#   SERVER_APP_DIR       carpeta del repo clonado en el servidor, p. ej. /opt/slaiton
+name: Deploy servidor
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-server
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Configurar SSH
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          echo "${{ secrets.SERVER_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Desplegar
+        run: |
+          ssh -i ~/.ssh/id_deploy "${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}" \
+            "cd '${{ secrets.SERVER_APP_DIR }}' && bash infra/scripts/deploy.sh"
