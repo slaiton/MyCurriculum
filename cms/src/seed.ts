@@ -6,8 +6,8 @@ const settings = {
   name: 'Stiven Laiton',
   role: 'desarrollador de software',
   bio:
-    'Ingeniero de Software Full Stack con habilidades para desarrollar soluciones tecnológicas innovadoras y a medida, ' +
-    'con un enfoque en la optimización de procesos y la creación de aplicaciones robustas y eficientes. ' +
+    'Ingeniero de Sistemas con experiencia como desarrollador full stack, enfocado en crear soluciones tecnológicas a medida, ' +
+    'optimizar procesos y construir aplicaciones robustas y eficientes. ' +
     'Proactivo, creativo y orientado a cumplir objetivos, me adapto rápido a los cambios y disfruto aprender nuevas tecnologías ' +
     'y enfrentar desafíos técnicos con iniciativa.',
   careerStartDate: '2018-02-18',
@@ -28,10 +28,20 @@ const categories = [
 
 const experiences = [
   {
+    jobTitle: 'Desarrollador full stack líder',
+    company: 'Aldia Logística',
+    startDate: '2026-05-01',
+    endDate: null,
+    description:
+      'Lidero el equipo de desarrollo y el ciclo completo de los proyectos full stack: Kotlin, Laravel, Angular, React, Express y PHP. ' +
+      'Auditoría de código, prácticas DevOps y despliegues automatizados en AWS y Docker. Bases de datos SQL y PostgreSQL, ' +
+      'arquitectura hexagonal y Clean Architecture, e integración de servicios REST y SOAP con clientes y proveedores.',
+  },
+  {
     jobTitle: 'Analista de software',
     company: 'Aldia Logística',
     startDate: '2020-03-20',
-    endDate: null,
+    endDate: '2026-05-01',
     description:
       'Responsable del ciclo completo de desarrollo como Full Stack Developer. Proyectos en Kotlin, Laravel, Angular, React, Express, PHP y JavaScript. ' +
       'Despliegues en AWS y Docker. Bases de datos SQL y PostgreSQL. Arquitectura hexagonal y Clean Architecture. ' +

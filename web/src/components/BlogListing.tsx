@@ -6,6 +6,7 @@ import { Pagination } from './Pagination';
 import { PostCard } from './PostCard';
 import { EmptyState } from './Sections';
 import { Breadcrumbs, type Crumb } from './Seo';
+import { Reveal } from './client/Reveal';
 
 /** Página de listado compartida por blog, categoría, etiqueta y búsqueda. */
 export function BlogListing({
@@ -62,11 +63,11 @@ export function BlogListing({
         </div>
 
         {result.items.length ? (
-          <div className="post-grid">
+          <Reveal className="post-grid">
             {result.items.map((post, i) => (
               <PostCard key={post.slug} post={post} priority={i < 2} />
             ))}
-          </div>
+          </Reveal>
         ) : (
           <EmptyState
             title={empty.title}

@@ -5,6 +5,7 @@ import { CategoryIcon, ArrowRight } from '@/components/Icons';
 import { PostCard, PostRow } from '@/components/PostCard';
 import { ContactCTA, EmptyState, ProjectCard } from '@/components/Sections';
 import { JsonLd } from '@/components/Seo';
+import { CountUp } from '@/components/client/CountUp';
 import { Reveal } from '@/components/client/Reveal';
 import { getCategories, getFeaturedPosts, getPosts, getProjects, getSettings, getSkills } from '@/lib/cms';
 import { mediaUrl, SITE_URL, yearsSince } from '@/lib/content';
@@ -64,16 +65,16 @@ export default async function HomePage() {
           </div>
           <dl className="stats">
             <div className="stat" data-color="blue">
-              <dt>{years}</dt>
+              <dt><CountUp value={years} /></dt>
               <dd>años de experiencia</dd>
             </div>
             <div className="stat" data-color="green">
-              <dt>{projects.length}</dt>
+              <dt><CountUp value={projects.length} /></dt>
               <dd>proyectos en producción</dd>
             </div>
             {latest.total > 0 && (
               <div className="stat" data-color="amber">
-                <dt>{latest.total}</dt>
+                <dt><CountUp value={latest.total} /></dt>
                 <dd>artículos</dd>
               </div>
             )}
@@ -101,7 +102,7 @@ export default async function HomePage() {
       </section>
 
       <section className="band-navy section" aria-labelledby="destacados">
-        <div className="container">
+        <Reveal className="container">
           <div className="section-head">
             <h2 id="destacados" className="section-title">Destacados</h2>
             <Link href="/blog" className="more-link">Todas las publicaciones →</Link>
@@ -120,7 +121,7 @@ export default async function HomePage() {
           ) : (
             <p className="section-lead">Muy pronto: los primeros artículos están en preparación.</p>
           )}
-        </div>
+        </Reveal>
       </section>
 
       <Reveal>
@@ -133,7 +134,7 @@ export default async function HomePage() {
           </div>
           <ul className="topic-grid">
             {categories.map((c, i) => (
-              <li key={c.slug}>
+              <li key={c.slug} data-reveal-item>
                 <Link href={`/blog/categoria/${c.slug}`} className="topic" data-color={c.color}>
                   <CategoryIcon color={c.color} />
                   <span>
@@ -164,7 +165,7 @@ export default async function HomePage() {
       )}
 
       <section className="band-white section" aria-labelledby="sobre">
-        <div className="container profile">
+        <Reveal className="container profile">
           <div className="profile__photo">
             <Image src="/perfil.jpg" alt={`Retrato de ${settings.name}`} width={300} height={360} />
           </div>
@@ -181,7 +182,7 @@ export default async function HomePage() {
               <a href={mediaUrl(settings.cv) ?? '/assets/files/HV.pdf'} className="more-link" download>Descargar CV (PDF)</a>
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       <Reveal>

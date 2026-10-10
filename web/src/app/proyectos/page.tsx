@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ContactCTA, ProjectCard } from '@/components/Sections';
 import { Breadcrumbs } from '@/components/Seo';
+import { Reveal } from '@/components/client/Reveal';
 import { getProjects, getSettings } from '@/lib/cms';
 
 export const metadata: Metadata = {
@@ -19,11 +20,11 @@ export default async function ProjectsPage() {
         <p>Aplicaciones que diseñé, construí y mantengo en producción.</p>
       </header>
       <section className="container" style={{ paddingBottom: 96 }}>
-        <div className="project-grid">
+        <Reveal className="project-grid">
           {projects.map((p) => (
             <ProjectCard key={p.slug} project={p} headingLevel={2} />
           ))}
-        </div>
+        </Reveal>
       </section>
       <ContactCTA settings={settings} />
     </>

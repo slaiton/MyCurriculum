@@ -123,3 +123,15 @@ npm install && npm run dev -- -p 3100
 | Resaltado de sintaxis en bloques de código | Opcional (Fase 5). |
 | Retiro de la app CRA, de `build/` versionado y de `web.yml` | Después del corte y con tu aprobación. |
 | Datos de experiencia con fechas solapadas | Contenido; se corrige desde el panel. |
+
+## 8. Ajustes posteriores (2026-10-10)
+
+- **Contenido:** la bio ahora presenta a Stiven como *Ingeniero de Sistemas*. Nueva experiencia *Desarrollador full stack líder* (Aldia Logística, desde mayo de 2026), que suma auditoría de código, DevOps, despliegues automatizados y liderazgo del equipo. *Analista de software* cierra en mayo de 2026. Actualizado en `web/src/lib/fallback.ts` y en `cms/src/seed.ts`.
+  - El contenido inicial solo se carga en una base vacía. La base SQLite local ya existía, así que ahí se edita desde el panel. La de producción se creará con el contenido nuevo.
+  - **Día exacto del cambio de cargo:** se usó el 1 de mayo; se ajusta desde el panel.
+- **Animaciones** (todas desactivadas con `prefers-reduced-motion`):
+  - **Al cargar:** el header baja, el hero entra escalonado (el H1 solo se desplaza, para no retrasar el LCP), las cifras cuentan desde 0, el código del hero se escribe línea a línea con cursor y los chips flotan suavemente. Las cabeceras de página y artículo también entran escalonadas.
+  - **Al hacer scroll:** las secciones aparecen; tarjetas, temas, filas de experiencia y habilidades entran escalonadas (90 ms entre elementos); las barras de habilidades se llenan; los títulos de sección se subrayan; el header se compacta.
+  - **Hover:** las tarjetas se elevan, las imágenes hacen zoom y la flecha de los botones se desplaza.
+  - **Robustez:** una sección que queda por encima tras un salto (anclas, tecla Fin, volver atrás) se revela igual; nunca queda contenido oculto.
+- **Corrección de zona horaria:** las fechas sin hora (`2026-05-01`) se mostraban un día antes en Colombia ("abr" en lugar de "may"). Ahora se formatean en UTC, y el cálculo de años lee la fecha sin depender de la zona horaria del servidor.

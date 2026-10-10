@@ -30,7 +30,6 @@ export async function generateMetadata(): Promise<Metadata> {
     authors: [{ name: s.name, url: SITE_URL }],
     openGraph: { type: 'website', locale: 'es_CO', siteName: s.name, title, description, url: '/' },
     twitter: { card: 'summary_large_image', title, description },
-    icons: { icon: '/favicon.ico', apple: '/logo192.png' },
   };
 }
 

@@ -29,7 +29,7 @@ export function PostCard({ post, variant = 'grid', priority = false }: { post: P
   const color = post.category?.color ?? 'teal';
   const Heading = variant === 'featured' ? 'h3' : 'h2';
   return (
-    <article className={`post-card ${variant === 'featured' ? 'featured__main' : ''}`}>
+    <article className={`post-card ${variant === 'featured' ? 'featured__main' : ''}`} data-reveal-item>
       <Link href={href} tabIndex={-1} aria-hidden>
         <Cover media={post.cover} color={color} ratio={variant === 'featured' ? '16x9' : '3x2'} priority={priority} />
       </Link>
@@ -46,7 +46,7 @@ export function PostCard({ post, variant = 'grid', priority = false }: { post: P
 export function PostRow({ post }: { post: Post }) {
   const href = `/blog/${post.slug}`;
   return (
-    <article className="post-row">
+    <article className="post-row" data-reveal-item>
       <Link href={href} tabIndex={-1} aria-hidden style={{ flex: '0 0 112px' }}>
         <Cover media={post.cover} color={post.category?.color ?? 'teal'} ratio="4x3" sizes="112px" />
       </Link>

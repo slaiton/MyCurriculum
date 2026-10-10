@@ -8,6 +8,7 @@ import { PostCard } from '@/components/PostCard';
 import { TableOfContents } from '@/components/Sections';
 import { Breadcrumbs, JsonLd } from '@/components/Seo';
 import { ReadingProgress } from '@/components/client/ReadingProgress';
+import { Reveal } from '@/components/client/Reveal';
 import { ShareLinks } from '@/components/client/ShareLinks';
 import { findRedirect, getAllPostSlugs, getPostBySlug, getRelatedPosts, getSettings } from '@/lib/cms';
 import { extractHeadings, formatDate, mediaUrl, readingMinutes, SITE_URL, whatsappUrl } from '@/lib/content';
@@ -163,11 +164,11 @@ export default async function PostPage({ params }: Props) {
           <Link href="/blog" className="more-link">← Volver al blog</Link>
         </div>
         {related.length > 0 && (
-          <div className="post-grid">
+          <Reveal className="post-grid">
             {related.map((p) => (
               <PostCard key={p.slug} post={p} />
             ))}
-          </div>
+          </Reveal>
         )}
       </section>
     </>

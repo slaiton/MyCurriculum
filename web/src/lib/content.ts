@@ -71,19 +71,28 @@ export function extractHeadings(body: BodySection[] = []): Heading[] {
 
 /** Años completos desde una fecha ISO; se recalcula solo con cada revalidación. */
 export function yearsSince(isoDate: string, now = new Date()): number {
-  const start = new Date(isoDate);
-  let years = now.getFullYear() - start.getFullYear();
-  const beforeAnniversary =
-    now.getMonth() < start.getMonth() || (now.getMonth() === start.getMonth() && now.getDate() < start.getDate());
+  // Se leen año/mes/día del texto para no depender de la zona horaria del servidor.
+  const [y, m, d] = isoDate.slice(0, 10).split('-').map(Number);
+  let years = now.getFullYear() - y;
+  const beforeAnniversary = now.getMonth() + 1 < m || (now.getMonth() + 1 === m && now.getDate() < d);
   if (beforeAnniversary) years -= 1;
   return Math.max(0, years);
 }
 
-const dateFormatter = new Intl.DateTimeFormat('es-CO', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'America/Bogota' });
-export const formatDate = (iso?: string | null) => (iso ? dateFormatter.format(new Date(iso)) : '');
+// Las fechas sin hora ("2026-05-01") se formatean en UTC para no correr un día en Colombia (UTC-5);
+// las fechas con hora (publishedAt) se muestran en hora de Bogotá.
+const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
+const fmt = (options: Intl.DateTimeFormatOptions) => ({
+  local: new Intl.DateTimeFormat('es-CO', { ...options, timeZone: 'America/Bogota' }),
+  utc: new Intl.DateTimeFormat('es-CO', { ...options, timeZone: 'UTC' }),
+});
+const formatWith = (f: ReturnType<typeof fmt>, iso: string) => (DATE_ONLY.test(iso) ? f.utc : f.local).format(new Date(iso));
 
-const monthYear = new Intl.DateTimeFormat('es-CO', { month: 'short', year: 'numeric', timeZone: 'America/Bogota' });
-export const formatMonthYear = (iso?: string | null) => (iso ? monthYear.format(new Date(iso)) : 'Actualidad');
+const dayMonthYear = fmt({ day: '2-digit', month: 'short', year: 'numeric' });
+export const formatDate = (iso?: string | null) => (iso ? formatWith(dayMonthYear, iso) : '');
+
+const monthYear = fmt({ month: 'short', year: 'numeric' });
+export const formatMonthYear = (iso?: string | null) => (iso ? formatWith(monthYear, iso) : 'Actualidad');
 
 export const whatsappUrl = (number: string, text?: string) =>
   `https://wa.me/${number.replace(/\D/g, '')}${text ? `?text=${encodeURIComponent(text)}` : ''}`;

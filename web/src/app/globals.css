@@ -346,10 +346,96 @@ a:hover > .cover img, .post-card:hover .cover img { transform: scale(1.03); }
 .footer-nav a:hover { color: #fff; text-decoration: underline; }
 .site-footer__bottom { padding-block: 20px 32px; border-top: 1px solid var(--navy-line); font-size: 13px; }
 
-/* ---------- Movimiento ---------- */
-.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
-.reveal[data-visible='true'] { opacity: 1; transform: none; }
+/* ---------- Movimiento ----------
+   Carga: header, hero escalonado, código que se escribe, chips flotando.
+   Scroll: bloques y tarjetas escalonadas (Reveal), barras de habilidades, header compacto.
+   Todo se desactiva con prefers-reduced-motion. El H1 solo se desplaza (sin opacidad) para no retrasar el LCP. */
+:root { --ease-out: cubic-bezier(0.16, 1, 0.3, 1); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+@keyframes rise-solid { from { transform: translateY(32px); } to { transform: none; } }
+@keyframes slide-down { from { opacity: 0; transform: translateY(-100%); } to { opacity: 1; transform: none; } }
+@keyframes pop { from { opacity: 0; transform: translateY(24px) scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes type-line { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+@keyframes float { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+@keyframes caret { 50% { opacity: 0; } }
+@keyframes underline { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* Header */
+.site-header { animation: slide-down 0.6s var(--ease-out) both; }
+.site-header__inner { transition: min-height 0.3s var(--ease-out); }
+.site-header[data-scrolled='true'] .site-header__inner { min-height: 58px; }
+
+/* Hero al cargar */
+.hero__text > * { animation: rise 0.8s var(--ease-out) both; }
+.hero__text > .hero__title { animation-name: rise-solid; }
+.hero__text > :nth-child(1) { animation-delay: 0.05s; }
+.hero__text > :nth-child(2) { animation-delay: 0.12s; }
+.hero__text > :nth-child(3) { animation-delay: 0.24s; }
+.hero__text > :nth-child(4) { animation-delay: 0.34s; }
+.hero__text > :nth-child(5) { animation-delay: 0.44s; }
+.stats .stat { animation: pop 0.6s var(--ease-out) both; }
+.stats .stat:nth-child(1) { animation-delay: 0.5s; }
+.stats .stat:nth-child(2) { animation-delay: 0.6s; }
+.stats .stat:nth-child(3) { animation-delay: 0.7s; }
+.hero__visual { animation: pop 1s var(--ease-out) 0.2s both; }
+.hero__art > span { animation: type-line 0.7s steps(28, end) both; }
+.hero__art > span:nth-child(1) { animation-delay: 0.7s; }
+.hero__art > span:nth-child(2) { animation-delay: 1.1s; }
+.hero__art > span:nth-child(3) { animation-delay: 1.5s; }
+.hero__art > span:nth-child(4) { animation-delay: 1.9s; }
+.hero__art > span:nth-child(5) { animation-delay: 2.3s; }
+.hero__art > span:nth-child(6) { animation-delay: 2.7s; }
+.hero__art > span:last-child::after { content: '▍'; margin-left: 4px; color: var(--teal-bright); animation: caret 1s steps(1) infinite; }
+.chip-float { animation: pop 0.7s var(--ease-out) 1.2s both, float 4s ease-in-out 1.9s infinite alternate; }
+.chip-float--tr { animation-delay: 1.4s, 2.1s; }
+
+/* Encabezados de página y artículo al cargar */
+.page-head > *, .article-head > * { animation: rise 0.7s var(--ease-out) both; }
+.page-head > :nth-child(2), .article-head > :nth-child(2) { animation-delay: 0.08s; }
+.page-head > :nth-child(3), .article-head > :nth-child(3) { animation-delay: 0.16s; }
+.page-head > :nth-child(n + 4), .article-head > :nth-child(n + 4) { animation-delay: 0.24s; }
+.page-head h1, .article-head h1 { animation-name: rise-solid; }
+.article-cover, .profile__photo { animation: pop 0.9s var(--ease-out) 0.2s both; }
+
+/* Títulos de sección: subrayado que crece al aparecer */
+.section-title { position: relative; }
+.reveal .section-title::after { content: ''; position: absolute; left: 0; bottom: -8px; width: 48px; height: 3px; border-radius: 3px; background: var(--teal-ink); transform: scaleX(0); transform-origin: left; }
+.band-navy .reveal .section-title::after { background: var(--teal-bright); }
+.reveal[data-visible='true'] .section-title::after { animation: underline 0.7s var(--ease-out) 0.2s both; }
+
+/* Scroll: bloque completo */
+.reveal--block { opacity: 0; transform: translateY(32px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.reveal--block[data-visible='true'] { opacity: 1; transform: none; }
+
+/* Scroll: elementos escalonados */
+.reveal--items [data-reveal-item] { opacity: 0; transform: translateY(32px) scale(0.98); transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out); transition-delay: calc(var(--i, 0) * 90ms); }
+.reveal--items[data-visible='true'] [data-reveal-item] { opacity: 1; transform: none; }
+/* Tras entrar, el hover responde sin el retraso escalonado */
+.reveal--items[data-visible='true'] [data-reveal-item]:hover { transition-delay: 0s; }
+
+/* Barras de habilidades que se llenan al aparecer */
+.reveal .skill__bar span { transform: scaleX(0); transform-origin: left; transition: transform 1.2s var(--ease-out); transition-delay: calc(var(--i, 0) * 90ms + 150ms); }
+.reveal[data-visible='true'] .skill__bar span { transform: scaleX(1); }
+
+/* Hover de tarjetas */
+.post-card, .project-card { transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out); }
+.project-card:hover { transform: translateY(-6px); box-shadow: 0 24px 40px -28px rgba(11, 31, 58, 0.55); }
+.post-card:hover { transform: translateY(-4px); }
+.project-card__media img { transition: transform 0.6s var(--ease-out); }
+.project-card:hover .project-card__media img { transform: scale(1.04); }
+.btn svg { transition: transform 0.25s var(--ease-out); }
+.btn:hover svg { transform: translateX(3px); }
+
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-  .reveal { opacity: 1; transform: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal--block, .reveal--items [data-reveal-item] { opacity: 1; transform: none; }
+  .reveal .skill__bar span { transform: none; }
 }

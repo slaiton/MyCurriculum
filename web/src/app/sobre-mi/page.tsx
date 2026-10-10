@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { ContactCTA } from '@/components/Sections';
 import { Breadcrumbs, JsonLd } from '@/components/Seo';
+import { Reveal } from '@/components/client/Reveal';
 import { getExperiences, getSettings, getSkills } from '@/lib/cms';
 import { formatMonthYear, mediaUrl, SITE_URL, yearsSince } from '@/lib/content';
 
@@ -59,9 +60,10 @@ export default async function AboutPage() {
       <section className="band-white section" aria-labelledby="experiencia">
         <div className="container">
           <h2 id="experiencia" className="section-title" style={{ marginBottom: 24 }}>Experiencia</h2>
+          <Reveal>
           <ol className="timeline">
             {experiences.map((e) => (
-              <li key={`${e.jobTitle}-${e.startDate}`}>
+              <li key={`${e.jobTitle}-${e.startDate}`} data-reveal-item>
                 <p className="timeline__date">
                   {formatMonthYear(e.startDate)} — {formatMonthYear(e.endDate)}
                 </p>
@@ -73,20 +75,23 @@ export default async function AboutPage() {
               </li>
             ))}
           </ol>
+          </Reveal>
         </div>
       </section>
 
       <section className="container section" aria-labelledby="habilidades">
         <h2 id="habilidades" className="section-title" style={{ marginBottom: 28 }}>Habilidades</h2>
+        <Reveal>
         <ul className="skill-list">
           {skills.map((s) => (
-            <li key={s.name} className="skill">
+            <li key={s.name} className="skill" data-reveal-item>
               <span>{s.name}</span>
               <span className="meta">{s.level}%</span>
               <span className="skill__bar" role="presentation"><span style={{ width: `${s.level}%` }} /></span>
             </li>
           ))}
         </ul>
+        </Reveal>
       </section>
 
       <ContactCTA settings={settings} />

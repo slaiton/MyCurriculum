@@ -11,7 +11,7 @@ export function ProjectCard({ project, headingLevel = 3 }: { project: Project; h
   const cover = mediaUrl(project.cover);
   const H = `h${headingLevel}` as const;
   return (
-    <article className="project-card" data-color={project.color}>
+    <article className="project-card" data-color={project.color} data-reveal-item>
       <div className="project-card__media">
         {cover ? (
           <Image src={cover} alt={project.cover?.alternativeText ?? `Captura de ${project.title}`} fill sizes="(max-width: 900px) 100vw, 400px" />
