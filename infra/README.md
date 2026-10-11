@@ -48,7 +48,9 @@ nano infra/.env
 
 En `infra/.env`:
 
-- Genera **cada** secreto con `openssl rand -base64 32` (para `APP_KEYS`, cuatro valores separados por comas).
+- Genera los secretos automáticamente con `bash infra/scripts/generar-secretos.sh`. Completa los vacíos y no toca los que ya tienen valor.
+  `PREVIEW_SECRET` y `REVALIDATE_SECRET` no se obtienen de ningún lado: son valores aleatorios que inventas una vez y que el sitio
+  y el CMS comparten desde este mismo archivo.
 - Mientras pruebas: `SITE_URL=https://nuevo.slaiton.com` y `SITE_DOMAIN=nuevo.slaiton.com`.
 - Deja `CMS_TOKEN` vacío por ahora.
 
