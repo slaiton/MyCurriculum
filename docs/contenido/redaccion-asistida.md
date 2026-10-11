@@ -43,6 +43,8 @@ Si falta la key del modelo elegido, los temas aprobados quedan en **error** con 
 |---|---|
 | **autoDraftOnApproval** | La opción principal: **activada**, cada tema aprobado se redacta y se sube como borrador. **Desactivada**, funciona como pausa: los temas aprobados esperan y se redactan cuando la vuelvas a activar. |
 | **proposeNow** | Márcala y guarda: la IA propone temas nuevos en ese momento. Se desmarca sola. |
+| **proposalFocus** | Opcional: orienta la próxima tanda ("Kotlin y logística", "temas para líderes técnicos"). Bórralo para volver a temas variados. |
+| **lastProposalAt / lastProposalResult** | Solo lectura: cuándo fue la última propuesta y su resultado (✅ cuántos temas y tokens, o ❌ el motivo del error). |
 | **weeklyProposals** | Propuesta automática de temas cada lunes a las 7:00 (hora de Colombia). |
 | **topicsPerRun** | Cuántos temas proponer cada vez (1–12, por defecto 6). |
 | **maxDraftsPerDay** | Tope de borradores por día, para controlar el gasto (por defecto 5). |

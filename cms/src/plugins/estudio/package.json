@@ -1,0 +1,11 @@
+{
+  "name": "estudio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Estudio editorial: generar temas con IA, aprobar, revisar y publicar desde el panel de Strapi",
+  "strapi": {
+    "kind": "plugin",
+    "name": "estudio",
+    "displayName": "Estudio editorial"
+  }
+}

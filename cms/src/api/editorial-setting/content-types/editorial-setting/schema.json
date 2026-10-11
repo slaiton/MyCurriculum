@@ -24,6 +24,17 @@
       "type": "boolean",
       "default": false
     },
+    "proposalFocus": {
+      "type": "text",
+      "maxLength": 500
+    },
+    "lastProposalAt": {
+      "type": "datetime"
+    },
+    "lastProposalResult": {
+      "type": "string",
+      "maxLength": 300
+    },
     "topicsPerRun": {
       "type": "integer",
       "default": 6,

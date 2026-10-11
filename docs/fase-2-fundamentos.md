@@ -154,3 +154,8 @@ npm install && npm run dev -- -p 3100
   compatible con OpenAI y modo JSON (`fetch` nativo, sin dependencias nuevas). Reintenta si la respuesta llega vacía (comportamiento
   documentado por DeepSeek) y valida la estructura en el CMS. Se elige en *Guía editorial → model*. Variable `DEEPSEEK_API_KEY`;
   `DEEPSEEK_BASE_URL` es opcional (proxy o pruebas). Probado con 11 casos contra un servidor simulado, sin llamadas reales.
+- **Estudio editorial** (`cms/src/plugins/estudio/`): plugin local con una página propia en el panel de Strapi para generar temas con IA,
+  aprobar, revisar y publicar en una sola pantalla. Rutas de administración protegidas por sesión. Probado en local: 11 casos de la API
+  con sesión de administrador (generar, aprobar, bloqueo por `[COMPLETAR]`, descartar, validaciones, tema propio, ajustes, publicación real
+  y 401 sin sesión) y verificación de la página en el navegador (carga sin errores, clic en "Generar temas", acceso desde el menú).
+  Guía: `docs/contenido/estudio-editorial.md`.

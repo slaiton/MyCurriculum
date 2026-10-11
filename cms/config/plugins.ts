@@ -3,6 +3,11 @@ import type { Core } from '@strapi/strapi';
 const MAX_UPLOAD = 100 * 1024 * 1024; // 100 MB (videos cortos). Debe coincidir con middlewares.ts y el proxy.
 
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
+  // Estudio editorial: tablero para generar temas con IA, aprobarlos y publicar (src/plugins/estudio).
+  estudio: {
+    enabled: true,
+    resolve: './src/plugins/estudio',
+  },
   upload: {
     config: {
       sizeLimit: MAX_UPLOAD,

@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.133.0",
+    "@strapi/design-system": "2.2.4",
+    "@strapi/icons": "2.2.4",
     "@strapi/plugin-users-permissions": "5.57.0",
     "@strapi/strapi": "5.57.0",
     "better-sqlite3": "12.8.0",

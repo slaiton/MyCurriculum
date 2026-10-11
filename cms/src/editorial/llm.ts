@@ -301,6 +301,7 @@ export async function proposeTopics(opts: {
   categories: { name: string; slug: string; description?: string | null }[];
   existingTitles: string[];
   profile?: string | null;
+  focus?: string | null;
 }) {
   if (FAKE()) return fakeProposals(opts);
 
@@ -316,7 +317,9 @@ ${opts.categories.map((c) => `- ${c.slug}: ${c.name}${c.description ? ` (${c.des
 Ya existen (no repetir ni hacer variaciones mínimas):
 ${opts.existingTitles.length ? opts.existingTitles.map((t) => `- ${t}`).join('\n') : '- (ninguno)'}
 
-Mezcla tutoriales prácticos, guías de decisión y checklists. Marca needsPersonalData=true cuando el valor del artículo dependa de experiencias reales del autor.`;
+${opts.focus?.trim() ? `Enfoque pedido por el autor para esta tanda (prioritario): ${opts.focus.trim()}
+
+` : ''}Mezcla tutoriales prácticos, guías de decisión y checklists. Marca needsPersonalData=true cuando el valor del artículo dependa de experiencias reales del autor.`;
 
   const { data, usage } = await callJson<{ topics: TopicProposal[] }>({
     model: opts.model,

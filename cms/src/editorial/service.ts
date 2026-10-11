@@ -14,6 +14,7 @@ interface Settings {
   topicsPerRun: number;
   maxDraftsPerDay: number;
   model: EditorialModel;
+  proposalFocus?: string | null;
   authorProfile?: string | null;
   styleGuide?: string | null;
 }
@@ -155,6 +156,16 @@ export function runPendingDrafts(strapi: Core.Strapi): Promise<void> {
   return draftingRun;
 }
 
+/** Guarda en la Guía editorial el resultado de la última propuesta, para verlo en el panel. */
+async function recordProposal(strapi: Core.Strapi, result: string) {
+  const s = (await strapi.documents(SETTINGS as never).findFirst()) as { documentId: string } | null;
+  if (!s) return;
+  await strapi.documents(SETTINGS as never).update({
+    documentId: s.documentId,
+    data: { lastProposalAt: new Date().toISOString(), lastProposalResult: result.slice(0, 300) } as never,
+  });
+}
+
 /** Pide nuevos temas y los guarda como "propuesto" para que el autor los apruebe o descarte. */
 export async function runProposals(strapi: Core.Strapi) {
   if (proposing) return;
@@ -177,6 +188,7 @@ export async function runProposals(strapi: Core.Strapi) {
       categories,
       existingTitles,
       profile: settings.authorProfile,
+      focus: settings.proposalFocus,
     });
 
     let created = 0;
@@ -199,8 +211,11 @@ export async function runProposals(strapi: Core.Strapi) {
       created++;
     }
     strapi.log.info(`[editorial] ${created} temas propuestos (${usage.inputTokens}+${usage.outputTokens} tokens)`);
+    await recordProposal(strapi, `✅ ${created} temas nuevos con ${usage.model} (${usage.inputTokens}+${usage.outputTokens} tokens)`);
   } catch (error) {
-    strapi.log.error(`[editorial] No se pudieron proponer temas: ${(error as Error).message}`);
+    const message = error instanceof EditorialError ? error.message : `Error inesperado: ${(error as Error).message}`;
+    strapi.log.error(`[editorial] No se pudieron proponer temas: ${message}`);
+    await recordProposal(strapi, `❌ ${message}`);
   } finally {
     proposing = false;
   }

@@ -545,6 +545,11 @@ export interface ApiEditorialSettingEditorialSetting
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    lastProposalAt: Schema.Attribute.DateTime;
+    lastProposalResult: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 300;
+      }>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -570,6 +575,10 @@ export interface ApiEditorialSettingEditorialSetting
     > &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'deepseek-v4-pro'>;
+    proposalFocus: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 500;
+      }>;
     proposeNow: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     publishedAt: Schema.Attribute.DateTime;
     styleGuide: Schema.Attribute.Text;
