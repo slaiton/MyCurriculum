@@ -7,7 +7,20 @@ cd "$(dirname "$0")/.."            # carpeta infra/
 set -a; . ./.env; set +a
 
 PROFILE_ARGS=()
-[ "${USE_CADDY:-true}" = "true" ] && PROFILE_ARGS=(--profile proxy)
+if [ "${USE_CADDY:-true}" = "true" ]; then
+  # Caddy necesita los puertos 80 y 443. Si otro servidor web (Nginx, Apache) ya los usa, se detiene con instrucciones.
+  caddy_running="$(docker compose --profile proxy ps -q caddy 2>/dev/null || true)"
+  if [ -z "$caddy_running" ] && ss -tlnH 2>/dev/null | awk '{print $4}' | grep -qE '(^|:)(80|443)$'; then
+    echo "Los puertos 80/443 ya están en uso por otro servidor web:"
+    ss -tlnp 2>/dev/null | grep -E ':(80|443) ' || true
+    echo
+    echo "Usa ese servidor como proxy en lugar de Caddy:"
+    echo "  1. Agrega USE_CADDY=false a infra/.env"
+    echo "  2. Configura los sitios con los archivos de infra/nginx/ (ver infra/README.md, paso 2.4)"
+    exit 1
+  fi
+  PROFILE_ARGS=(--profile proxy)
+fi
 
 echo "==> Actualizando código"
 git -C .. pull --ff-only
