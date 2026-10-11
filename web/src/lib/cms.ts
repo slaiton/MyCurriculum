@@ -79,6 +79,7 @@ const POST_FULL_POPULATE: Query = {
   'populate[tags]': true,
   'populate[seo][populate]': '*',
   'populate[body][on][content.rich-text]': true,
+  'populate[body][on][content.markdown]': true,
   'populate[body][on][content.video][populate]': '*',
   'populate[body][on][content.image][populate]': '*',
 };
@@ -217,6 +218,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
       'populate[cover]': true,
       'populate[seo][populate]': '*',
       'populate[body][on][content.rich-text]': true,
+      'populate[body][on][content.markdown]': true,
       'populate[body][on][content.video][populate]': '*',
       'populate[body][on][content.image][populate]': '*',
     },

@@ -1,10 +1,11 @@
 // Renderiza el cuerpo de una publicación: secciones del dynamic zone y bloques del editor (formato Blocks de Strapi).
 // Todo se convierte a JSX: nunca se inserta HTML crudo, así el contenido no puede inyectar scripts.
 import type { ReactNode } from 'react';
-import { extractHeadings, inlineText, mediaUrl, youtubeId } from '@/lib/content';
+import { extractHeadings, inlineText, markdownHeadings, mediaUrl, youtubeId } from '@/lib/content';
 import type { Block, BodySection, InlineNode, ListItemNode } from '@/lib/types';
 import { CopyButton } from './client/CopyButton';
 import { YouTubeLite } from './client/VideoPlayer';
+import { Markdown } from './Markdown';
 
 const SAFE_URL = /^(https?:|mailto:|tel:|\/|#)/i;
 
@@ -98,23 +99,31 @@ function Blocks({ blocks, headingIds }: { blocks: Block[]; headingIds: Map<Block
 }
 
 export function Body({ sections }: { sections: BodySection[] }) {
-  // Asigna a cada encabezado el mismo id que usa la tabla de contenido.
-  const headings = extractHeadings(sections);
+  // Reparte, en orden, los mismos ids que usa la tabla de contenido.
+  const ids = extractHeadings(sections).map((h) => h.id);
+  let cursor = 0;
   const headingIds = new Map<Block, string>();
-  let h = 0;
-  for (const s of sections) {
-    if (s.__component !== 'content.rich-text') continue;
-    for (const b of s.content ?? []) {
-      if (b.type === 'heading' && (b.level === 2 || b.level === 3)) headingIds.set(b, headings[h++]?.id ?? '');
+  const markdownIds = new Map<number, string[]>();
+  sections.forEach((s, index) => {
+    if (s.__component === 'content.rich-text') {
+      for (const b of s.content ?? []) {
+        if (b.type === 'heading' && (b.level === 2 || b.level === 3)) headingIds.set(b, ids[cursor++] ?? '');
+      }
+    } else if (s.__component === 'content.markdown') {
+      const count = markdownHeadings(s.body ?? '').length;
+      markdownIds.set(index, ids.slice(cursor, cursor + count));
+      cursor += count;
     }
-  }
+  });
 
   return (
     <div className="prose">
-      {sections.map((section) => {
+      {sections.map((section, index) => {
         switch (section.__component) {
           case 'content.rich-text':
             return <Blocks key={`rt-${section.id}`} blocks={section.content ?? []} headingIds={headingIds} />;
+          case 'content.markdown':
+            return <Markdown key={`md-${section.id}`} source={section.body ?? ''} headingIds={markdownIds.get(index) ?? []} />;
           case 'content.video': {
             const yt = youtubeId(section.youtubeUrl);
             const file = mediaUrl(section.file);

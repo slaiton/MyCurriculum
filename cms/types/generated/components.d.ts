@@ -17,6 +17,18 @@ export interface ContentImage extends Struct.ComponentSchema {
   };
 }
 
+export interface ContentMarkdown extends Struct.ComponentSchema {
+  collectionName: 'components_content_markdowns';
+  info: {
+    description: 'Pega texto en Markdown: ## t\u00EDtulos, listas, enlaces, tablas y bloques de c\u00F3digo con ```';
+    displayName: 'Markdown';
+    icon: 'code';
+  };
+  attributes: {
+    body: Schema.Attribute.RichText & Schema.Attribute.Required;
+  };
+}
+
 export interface ContentRichText extends Struct.ComponentSchema {
   collectionName: 'components_content_rich_texts';
   info: {
@@ -72,6 +84,7 @@ declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
       'content.image': ContentImage;
+      'content.markdown': ContentMarkdown;
       'content.rich-text': ContentRichText;
       'content.video': ContentVideo;
       'shared.seo': SharedSeo;

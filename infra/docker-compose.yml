@@ -45,6 +45,8 @@ services:
       DATABASE_SSL: "false"
       CLIENT_URL: ${SITE_URL}
       PREVIEW_SECRET: ${PREVIEW_SECRET}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
     volumes:
       - uploads:/opt/app/public/uploads
     # Solo escucha en localhost: el acceso público pasa por el proxy (Caddy o Nginx del servidor).

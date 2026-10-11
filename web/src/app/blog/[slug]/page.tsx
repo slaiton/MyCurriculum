@@ -107,7 +107,11 @@ export default async function PostPage({ params }: Props) {
             <div>
               <strong>{settings.name}</strong>
               <span className="meta">
-                Publicado el <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+                {post.publishedAt ? (
+                  <>Publicado el <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time></>
+                ) : (
+                  'Borrador sin publicar'
+                )}
                 {post.contentUpdatedAt && (
                   <>
                     {' '}· Actualizado el <time dateTime={post.contentUpdatedAt}>{formatDate(post.contentUpdatedAt)}</time>

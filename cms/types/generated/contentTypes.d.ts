@@ -526,6 +526,70 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiEditorialSettingEditorialSetting
+  extends Struct.SingleTypeSchema {
+  collectionName: 'editorial_settings';
+  info: {
+    description: 'Opciones de la redacci\u00F3n asistida con IA, gu\u00EDa de estilo y perfil del autor.';
+    displayName: 'Gu\u00EDa editorial';
+    pluralName: 'editorial-settings';
+    singularName: 'editorial-setting';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    authorProfile: Schema.Attribute.Text;
+    autoDraftOnApproval: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::editorial-setting.editorial-setting'
+    > &
+      Schema.Attribute.Private;
+    maxDraftsPerDay: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 20;
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<5>;
+    model: Schema.Attribute.Enumeration<
+      [
+        'deepseek-v4-pro',
+        'deepseek-flash',
+        'claude-opus-5-5',
+        'claude-sonnet-5-5',
+      ]
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'deepseek-v4-pro'>;
+    proposeNow: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    publishedAt: Schema.Attribute.DateTime;
+    styleGuide: Schema.Attribute.Text;
+    topicsPerRun: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 12;
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<6>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    weeklyProposals: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+  };
+}
+
 export interface ApiExperienceExperience extends Struct.CollectionTypeSchema {
   collectionName: 'experiences';
   info: {
@@ -572,7 +636,12 @@ export interface ApiPostPost extends Struct.CollectionTypeSchema {
   };
   attributes: {
     body: Schema.Attribute.DynamicZone<
-      ['content.rich-text', 'content.video', 'content.image']
+      [
+        'content.rich-text',
+        'content.markdown',
+        'content.video',
+        'content.image',
+      ]
     > &
       Schema.Attribute.Required;
     category: Schema.Attribute.Relation<'manyToOne', 'api::category.category'>;
@@ -619,7 +688,12 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
   };
   attributes: {
     body: Schema.Attribute.DynamicZone<
-      ['content.rich-text', 'content.video', 'content.image']
+      [
+        'content.rich-text',
+        'content.markdown',
+        'content.video',
+        'content.image',
+      ]
     >;
     color: Schema.Attribute.Enumeration<
       ['violet', 'amber', 'coral', 'green', 'teal', 'blue']
@@ -639,6 +713,7 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
     repoUrl: Schema.Attribute.String;
+    scheduledAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     stack: Schema.Attribute.JSON;
@@ -794,6 +869,74 @@ export interface ApiTagTag extends Struct.CollectionTypeSchema {
     posts: Schema.Attribute.Relation<'manyToMany', 'api::post.post'>;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTopicTopic extends Struct.CollectionTypeSchema {
+  collectionName: 'topics';
+  info: {
+    description: 'Ideas de art\u00EDculos. Al aprobar un tema, se redacta con IA y se sube como borrador.';
+    displayName: 'Tema propuesto';
+    pluralName: 'topics';
+    singularName: 'topic';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    angle: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 600;
+      }>;
+    category: Schema.Attribute.Relation<'manyToOne', 'api::category.category'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    draftDocumentId: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 64;
+      }>;
+    draftTitle: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    errorMessage: Schema.Attribute.Text;
+    generatedAt: Schema.Attribute.DateTime;
+    inputTokens: Schema.Attribute.Integer;
+    keyword: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::topic.topic'> &
+      Schema.Attribute.Private;
+    model: Schema.Attribute.String;
+    needsPersonalData: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    notes: Schema.Attribute.Text;
+    outline: Schema.Attribute.Text;
+    outputTokens: Schema.Attribute.Integer;
+    publishedAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<
+      [
+        'propuesto',
+        'aprobado',
+        'en_redaccion',
+        'borrador_listo',
+        'descartado',
+        'error',
+      ]
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'propuesto'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 140;
+      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1313,6 +1456,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::category.category': ApiCategoryCategory;
+      'api::editorial-setting.editorial-setting': ApiEditorialSettingEditorialSetting;
       'api::experience.experience': ApiExperienceExperience;
       'api::post.post': ApiPostPost;
       'api::project.project': ApiProjectProject;
@@ -1320,6 +1464,7 @@ declare module '@strapi/strapi' {
       'api::site-setting.site-setting': ApiSiteSettingSiteSetting;
       'api::skill.skill': ApiSkillSkill;
       'api::tag.tag': ApiTagTag;
+      'api::topic.topic': ApiTopicTopic;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

@@ -1,0 +1,57 @@
+{
+  "kind": "singleType",
+  "collectionName": "editorial_settings",
+  "info": {
+    "singularName": "editorial-setting",
+    "pluralName": "editorial-settings",
+    "displayName": "Guía editorial",
+    "description": "Opciones de la redacción asistida con IA, guía de estilo y perfil del autor."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "autoDraftOnApproval": {
+      "type": "boolean",
+      "default": true
+    },
+    "weeklyProposals": {
+      "type": "boolean",
+      "default": false
+    },
+    "proposeNow": {
+      "type": "boolean",
+      "default": false
+    },
+    "topicsPerRun": {
+      "type": "integer",
+      "default": 6,
+      "min": 1,
+      "max": 12
+    },
+    "maxDraftsPerDay": {
+      "type": "integer",
+      "default": 5,
+      "min": 1,
+      "max": 20
+    },
+    "model": {
+      "type": "enumeration",
+      "enum": [
+        "deepseek-v4-pro",
+        "deepseek-flash",
+        "claude-opus-5-5",
+        "claude-sonnet-5-5"
+      ],
+      "default": "deepseek-v4-pro",
+      "required": true
+    },
+    "authorProfile": {
+      "type": "text"
+    },
+    "styleGuide": {
+      "type": "text"
+    }
+  }
+}

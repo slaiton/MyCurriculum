@@ -252,6 +252,12 @@ a:hover > .cover img, .post-card:hover .cover img { transform: scale(1.03); }
 .prose figure { margin-left: 0; margin-right: 0; }
 .prose figcaption { margin-top: 10px; font-size: 15px; color: var(--muted); }
 .prose img { border-radius: 14px; height: auto; }
+.prose hr { border: 0; border-top: 1px solid var(--line); margin-block: 40px; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+.prose table { width: 100%; border-collapse: collapse; font-size: 16px; line-height: 1.5; }
+.prose th, .prose td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+.prose th { background: var(--sand); font-weight: 600; color: var(--ink); }
+.prose tr:last-child td { border-bottom: 0; }
 
 .code-block { margin: 0; border-radius: 14px; overflow: hidden; background: var(--navy); }
 .code-block__bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 6px 6px 6px 18px; background: var(--navy-2); color: var(--on-navy-muted); font-family: var(--font-mono), monospace; font-size: 13px; }

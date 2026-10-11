@@ -30,6 +30,7 @@
       "type": "dynamiczone",
       "components": [
         "content.rich-text",
+        "content.markdown",
         "content.video",
         "content.image"
       ]
@@ -66,6 +67,9 @@
     "order": {
       "type": "integer",
       "default": 0
+    },
+    "scheduledAt": {
+      "type": "datetime"
     },
     "seo": {
       "type": "component",

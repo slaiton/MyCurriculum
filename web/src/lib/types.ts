@@ -49,6 +49,7 @@ export type Block =
 // --- Secciones del cuerpo (dynamic zone "body") ---
 export type BodySection =
   | { __component: 'content.rich-text'; id: number; content: Block[] }
+  | { __component: 'content.markdown'; id: number; body: string }
   | { __component: 'content.video'; id: number; file?: Media | null; youtubeUrl?: string | null; caption?: string | null }
   | { __component: 'content.image'; id: number; image: Media; caption?: string | null; browserFrame?: boolean | null };
 

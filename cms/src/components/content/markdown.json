@@ -1,0 +1,8 @@
+{
+  "collectionName": "components_content_markdowns",
+  "info": { "displayName": "Markdown", "icon": "code", "description": "Pega texto en Markdown: ## títulos, listas, enlaces, tablas y bloques de código con ```" },
+  "options": {},
+  "attributes": {
+    "body": { "type": "richtext", "required": true }
+  }
+}

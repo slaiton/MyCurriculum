@@ -35,16 +35,48 @@ function blockText(block: Block): string {
   }
 }
 
-const richBlocks = (body: BodySection[] = []): Block[] =>
-  body.flatMap((s) => (s.__component === 'content.rich-text' ? s.content ?? [] : []));
+/** Quita la sintaxis inline de Markdown (énfasis, código, enlaces) para obtener texto plano. */
+export const plainMarkdown = (text: string) =>
+  text
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/[`*_~]/g, '')
+    .trim();
+
+/** Líneas de Markdown fuera de los bloques de código ``` o ~~~. */
+function markdownProseLines(md: string): string[] {
+  const lines: string[] = [];
+  let inFence = false;
+  for (const line of md.split(/\r?\n/)) {
+    if (/^\s*(```|~~~)/.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (!inFence) lines.push(line);
+  }
+  return lines;
+}
+
+/** Títulos de una sección Markdown. "#" y "##" cuentan como H2 (el H1 es el título del artículo); "###" como H3. */
+export function markdownHeadings(md: string): { level: 2 | 3; text: string }[] {
+  const out: { level: 2 | 3; text: string }[] = [];
+  for (const line of markdownProseLines(md)) {
+    const m = /^(#{1,3})\s+(.+?)\s*#*\s*$/.exec(line);
+    if (m) out.push({ level: m[1].length === 3 ? 3 : 2, text: plainMarkdown(m[2]) });
+  }
+  return out;
+}
 
 /** Minutos de lectura estimados (200 palabras por minuto, mínimo 1). */
 export function readingMinutes(body: BodySection[] = []): number {
-  const words = richBlocks(body)
-    .map(blockText)
-    .join(' ')
-    .split(/\s+/)
-    .filter(Boolean).length;
+  const text = body
+    .map((s) => {
+      if (s.__component === 'content.rich-text') return (s.content ?? []).map(blockText).join(' ');
+      if (s.__component === 'content.markdown') return s.body ?? '';
+      return '';
+    })
+    .join(' ');
+  const words = text.split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 200));
 }
 
@@ -54,19 +86,28 @@ export interface Heading {
   level: 2 | 3;
 }
 
-/** Encabezados H2/H3 del cuerpo, con ids estables y únicos, para la tabla de contenido. */
+/**
+ * Títulos H2/H3 de todo el cuerpo, en orden y con ids únicos, para la tabla de contenido.
+ * Body.tsx asigna los mismos ids, en el mismo orden, al renderizar.
+ */
 export function extractHeadings(body: BodySection[] = []): Heading[] {
+  const raw: { level: 2 | 3; text: string }[] = [];
+  for (const s of body) {
+    if (s.__component === 'content.rich-text') {
+      for (const block of s.content ?? []) {
+        if (block.type === 'heading' && (block.level === 2 || block.level === 3)) raw.push({ level: block.level, text: inlineText(block.children) });
+      }
+    } else if (s.__component === 'content.markdown') {
+      raw.push(...markdownHeadings(s.body ?? ''));
+    }
+  }
   const seen = new Map<string, number>();
-  const headings: Heading[] = [];
-  for (const block of richBlocks(body)) {
-    if (block.type !== 'heading' || (block.level !== 2 && block.level !== 3)) continue;
-    const text = inlineText(block.children);
+  return raw.map(({ level, text }) => {
     const base = slugify(text) || 'seccion';
     const count = seen.get(base) ?? 0;
     seen.set(base, count + 1);
-    headings.push({ id: count ? `${base}-${count + 1}` : base, text, level: block.level });
-  }
-  return headings;
+    return { id: count ? `${base}-${count + 1}` : base, text, level };
+  });
 }
 
 /** Años completos desde una fecha ISO; se recalcula solo con cada revalidación. */

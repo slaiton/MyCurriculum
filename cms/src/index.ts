@@ -1,5 +1,6 @@
 import type { Core } from '@strapi/strapi';
 import { errors } from '@strapi/utils';
+import { ensureSettings, pendingPlaceholders, runPendingDrafts, runProposals } from './editorial/service';
 import { seedIfEmpty } from './seed';
 
 // Tipos con página pública propia: prefijo de su URL en el sitio.
@@ -31,6 +32,41 @@ async function registerSlugRedirect(strapi: Core.Strapi, uid: string, oldSlug: s
 
 export default {
   register({ strapi }: { strapi: Core.Strapi }) {
+    // Redacción asistida: al aprobar un tema se redacta y se sube como borrador (en segundo plano,
+    // para no bloquear el panel). La tarea programada reintenta lo que quede pendiente.
+    strapi.documents.use(async (context, next) => {
+      const result = await next();
+      const doc = result as { status?: string; proposeNow?: boolean; documentId?: string } | null;
+      const isWrite = context.action === 'create' || context.action === 'update';
+      if (isWrite && context.uid === 'api::topic.topic' && doc?.status === 'aprobado') {
+        setImmediate(() => void runPendingDrafts(strapi));
+      }
+      if (isWrite && context.uid === 'api::editorial-setting.editorial-setting' && doc?.proposeNow && doc.documentId) {
+        // "Proponer temas ahora": se desmarca solo y lanza la propuesta.
+        await strapi.documents('api::editorial-setting.editorial-setting' as never).update({
+          documentId: doc.documentId,
+          data: { proposeNow: false } as never,
+        });
+        setImmediate(() => void runProposals(strapi));
+      }
+      return result;
+    });
+
+    // Aprobación humana obligatoria: lo que llega por la API pública (importador, automatizaciones)
+    // solo crea o edita BORRADORES. Publicar queda para el panel y para la tarea programada.
+    strapi.documents.use(async (context, next) => {
+      const ctx = strapi.requestContext.get() as { state?: { route?: { info?: { type?: string } } } } | undefined;
+      if (ctx?.state?.route?.info?.type !== 'content-api') return next();
+      const params = context.params as { status?: string };
+      if (context.action === 'publish' || context.action === 'unpublish') {
+        throw new errors.ForbiddenError('Publicar o retirar contenido solo se permite desde el panel.');
+      }
+      if ((context.action === 'create' || context.action === 'update') && params.status === 'published') {
+        delete params.status;
+      }
+      return next();
+    });
+
     strapi.documents.use(async (context, next) => {
       if (context.action !== 'publish' || !(context.uid in PUBLIC_PATHS)) return next();
 
@@ -38,7 +74,13 @@ export default {
       const docs = strapi.documents(context.uid as 'api::post.post');
 
       // Validación editorial antes de publicar: la portada necesita texto alternativo.
-      const draft = await docs.findOne({ documentId, status: 'draft', populate: ['cover'] });
+      const draft = await docs.findOne({ documentId, status: 'draft', populate: ['cover', 'body'] });
+      const pending = pendingPlaceholders((draft as { body?: unknown } | null)?.body);
+      if (pending.length) {
+        throw new errors.ValidationError(
+          `El artículo tiene ${pending.length} marcador(es) [COMPLETAR] sin reemplazar: ${pending.map((p) => `"${p}"`).join(', ')}.`,
+        );
+      }
       const cover = (draft as { cover?: { alternativeText?: string | null } | null } | null)?.cover;
       if (cover && !cover.alternativeText?.trim()) {
         throw new errors.ValidationError(
@@ -59,5 +101,7 @@ export default {
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await seedIfEmpty(strapi);
+    await ensureSettings(strapi);
+
   },
 };

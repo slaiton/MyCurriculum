@@ -17,7 +17,7 @@ export function PostMeta({ post, withCategory = true }: { post: Post; withCatego
     <div className="post-card__meta">
       {withCategory && <CategoryBadge post={post} />}
       <span className="meta">
-        <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+        {post.publishedAt ? <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time> : 'Borrador'}
       </span>
     </div>
   );

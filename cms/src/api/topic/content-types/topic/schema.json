@@ -1,0 +1,80 @@
+{
+  "kind": "collectionType",
+  "collectionName": "topics",
+  "info": {
+    "singularName": "topic",
+    "pluralName": "topics",
+    "displayName": "Tema propuesto",
+    "description": "Ideas de artículos. Al aprobar un tema, se redacta con IA y se sube como borrador."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 140
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "propuesto",
+        "aprobado",
+        "en_redaccion",
+        "borrador_listo",
+        "descartado",
+        "error"
+      ],
+      "default": "propuesto",
+      "required": true
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category"
+    },
+    "keyword": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "angle": {
+      "type": "text",
+      "maxLength": 600
+    },
+    "outline": {
+      "type": "text"
+    },
+    "notes": {
+      "type": "text"
+    },
+    "needsPersonalData": {
+      "type": "boolean",
+      "default": false
+    },
+    "draftTitle": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "draftDocumentId": {
+      "type": "string",
+      "maxLength": 64
+    },
+    "errorMessage": {
+      "type": "text"
+    },
+    "model": {
+      "type": "string"
+    },
+    "inputTokens": {
+      "type": "integer"
+    },
+    "outputTokens": {
+      "type": "integer"
+    },
+    "generatedAt": {
+      "type": "datetime"
+    }
+  }
+}

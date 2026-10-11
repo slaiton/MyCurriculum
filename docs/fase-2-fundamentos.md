@@ -135,3 +135,22 @@ npm install && npm run dev -- -p 3100
   - **Hover:** las tarjetas se elevan, las imágenes hacen zoom y la flecha de los botones se desplaza.
   - **Robustez:** una sección que queda por encima tras un salto (anclas, tecla Fin, volver atrás) se revela igual; nunca queda contenido oculto.
 - **Corrección de zona horaria:** las fechas sin hora (`2026-05-01`) se mostraban un día antes en Colombia ("abr" en lugar de "may"). Ahora se formatean en UTC, y el cálculo de años lee la fecha sin depender de la zona horaria del servidor.
+- **Sección Markdown en el cuerpo** (`content.markdown`, campo *richtext* de Strapi): se pega Markdown tal cual. Se renderiza con
+  `react-markdown` 10.1 + `remark-gfm` 4.0.1 (tablas). No ejecuta HTML incrustado. Los títulos `##`/`###` entran en la tabla de contenido
+  y los bloques de código tienen botón *Copiar*. Motivo: el editor *Texto* (Blocks) guardaba el Markdown pegado como texto literal.
+- **Importador** `cms/scripts/importar-articulo.mjs`: sube archivos `.md` con encabezado (front matter) como **borradores**, valida longitudes,
+  crea etiquetas y actualiza el borrador si el slug ya existe. Probado en local con los dos artículos de `docs/contenido/articulos/`.
+- **Regla de aprobación en el CMS:** la API pública ya no puede publicar ni retirar contenido (antes un token con permiso *create*
+  podía publicar con `?status=published`; verificado y corregido). Solo se publica desde el panel o con *scheduledAt*.
+- En la vista previa, un borrador muestra "Borrador sin publicar" en lugar de una fecha vacía.
+- **Redacción asistida** (`cms/src/editorial/`): nuevas colecciones *Tema propuesto* y *Guía editorial*. Al aprobar un tema, Claude redacta
+  el artículo (salida JSON validada por esquema, `@anthropic-ai/sdk` 0.133.0, `claude-opus-5-5` por defecto, con *fallbacks* de servidor
+  activados) y se crea como **borrador** con sección Markdown. Incluye propuesta de temas (manual o semanal), tope diario, recuperación
+  de temas atascados y bloqueo de publicación mientras haya marcadores `[COMPLETAR]`. Probado en local en modo simulado (`EDITORIAL_FAKE`),
+  sin llamadas reales a la API.
+- **Corregido:** la tarea de publicación programada fallaba cada minuto con "Invalid key scheduledAt" porque *Proyecto* no tenía el campo
+  (las publicaciones sí se programaban). Se agregó `scheduledAt` a *Proyecto*.
+- **DeepSeek como proveedor alternativo** (`cms/src/editorial/llm.ts`): modelos `deepseek-v4-pro` (por defecto) y `deepseek-flash`, vía su API
+  compatible con OpenAI y modo JSON (`fetch` nativo, sin dependencias nuevas). Reintenta si la respuesta llega vacía (comportamiento
+  documentado por DeepSeek) y valida la estructura en el CMS. Se elige en *Guía editorial → model*. Variable `DEEPSEEK_API_KEY`;
+  `DEEPSEEK_BASE_URL` es opcional (proxy o pruebas). Probado con 11 casos contra un servidor simulado, sin llamadas reales.
