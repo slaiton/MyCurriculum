@@ -16,6 +16,8 @@ export interface Seo {
   canonicalUrl?: string | null;
   noIndex?: boolean | null;
   ogImage?: Media | null;
+  /** Palabras clave (las sugiere la IA en el Estudio editorial). */
+  keywords?: string[] | null;
 }
 
 // --- Formato Blocks de Strapi (campo "blocks") ---
@@ -81,6 +83,15 @@ export interface Post {
   seo?: Seo | null;
 }
 
+export interface Download {
+  id?: number;
+  label: string;
+  platform: 'windows-x64' | 'windows-arm64' | 'macos' | 'linux' | 'android' | 'ios' | 'otro';
+  url: string;
+  sizeMb?: number | null;
+  sha256?: string | null;
+}
+
 export interface Project {
   documentId: string;
   title: string;
@@ -90,6 +101,9 @@ export interface Project {
   cover?: Media | null;
   url?: string | null;
   repoUrl?: string | null;
+  version?: string | null;
+  requirements?: string | null;
+  downloads?: Download[] | null;
   stack?: string[] | null;
   color: CategoryColor;
   order?: number | null;

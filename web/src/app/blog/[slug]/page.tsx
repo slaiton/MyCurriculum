@@ -28,6 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    keywords: post.seo?.keywords?.length ? post.seo.keywords : undefined,
     alternates: { canonical: post.seo?.canonicalUrl || `/blog/${post.slug}` },
     robots: post.seo?.noIndex ? { index: false, follow: true } : undefined,
     openGraph: {

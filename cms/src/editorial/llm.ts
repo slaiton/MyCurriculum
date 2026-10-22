@@ -386,3 +386,131 @@ function fakeProposals(opts: { count: number; categories: { slug: string; name: 
     usage: { model: 'prueba local', inputTokens: 0, outputTokens: 0 },
   };
 }
+
+// ---------------- SEO de proyectos: palabras clave y metadatos ----------------
+
+export interface SeoKeyword {
+  term: string;
+  /** principal = el término que la página debe ganar; secundaria = variantes y sinónimos; long-tail = búsquedas específicas. */
+  type: 'principal' | 'secundaria' | 'long-tail';
+  intent: 'comercial' | 'informativa' | 'navegacional';
+  language: 'es' | 'en';
+}
+
+export interface SeoSuggestion {
+  keywords: SeoKeyword[];
+  metaTitle: string;
+  metaDescription: string;
+  /** Secciones o frases que conviene agregar al contenido para posicionar esas búsquedas. */
+  contentTips: string[];
+  rationale: string;
+}
+
+export interface SeoInput {
+  title: string;
+  summary: string;
+  body: string;
+  targetKeywords: string[];
+  previousKeywords: string[];
+  url?: string | null;
+}
+
+const SEO_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['keywords', 'metaTitle', 'metaDescription', 'contentTips', 'rationale'],
+  properties: {
+    keywords: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['term', 'type', 'intent', 'language'],
+        properties: {
+          term: { type: 'string' },
+          type: { type: 'string', enum: ['principal', 'secundaria', 'long-tail'] },
+          intent: { type: 'string', enum: ['comercial', 'informativa', 'navegacional'] },
+          language: { type: 'string', enum: ['es', 'en'] },
+        },
+      },
+    },
+    metaTitle: { type: 'string' },
+    metaDescription: { type: 'string' },
+    contentTips: { type: 'array', items: { type: 'string' } },
+    rationale: { type: 'string' },
+  },
+};
+
+const SEO_EXAMPLE: SeoSuggestion = {
+  keywords: [
+    { term: 'software de transporte', type: 'principal', intent: 'comercial', language: 'es' },
+    { term: 'tms', type: 'secundaria', intent: 'comercial', language: 'es' },
+    { term: 'software para gestionar flota de camiones', type: 'long-tail', intent: 'comercial', language: 'es' },
+  ],
+  metaTitle: 'CargoApp: software de transporte y TMS en la nube',
+  metaDescription: 'Software de transporte (TMS) para planificar cargas, rutas y seguimiento de envíos en tiempo real. Carga masiva de guías y reportes.',
+  contentTips: ['Agregar una sección "Carga masiva de guías desde Excel" con un H2 que use esa frase.'],
+  rationale: 'La búsqueda principal tiene intención comercial y coincide con la función central del producto.',
+};
+
+const SEO_RULES = `Eres especialista en SEO para software en Latinoamérica (español) y conoces cómo busca la gente en Google.
+Analiza el producto y propone las palabras clave por las que debería posicionar su página, y los metadatos.
+Reglas:
+- Usa SOLO funciones que el texto del producto confirma. No prometas lo que no hace (ni plataformas, ni integraciones, ni precios).
+- Incluye y respeta las palabras clave objetivo del autor; complétalas con sinónimos, términos del sector (incluido el inglés si la gente lo busca así, p. ej. "TMS" o "keyboard and mouse sharing") y búsquedas long-tail.
+- Entre 10 y 20 palabras clave, en minúsculas, sin duplicados. Exactamente una de tipo "principal".
+- No inventes volúmenes de búsqueda ni cifras; si estimas popularidad, dilo en "rationale" como estimación.
+- metaTitle: máximo 60 caracteres; empieza por el nombre del producto o la palabra clave principal.
+- metaDescription: entre 140 y 160 caracteres, en español, natural (no una lista de palabras), con la palabra clave principal al inicio, 1-2 secundarias y un beneficio o llamada a la acción.
+- contentTips: 3 a 6 recomendaciones concretas para el contenido de la página (títulos H2, preguntas frecuentes, frases), porque Google posiciona por el contenido visible, no por la meta.`;
+
+function sanitizeSeo(raw: SeoSuggestion, targets: string[]): SeoSuggestion {
+  if (!raw || !Array.isArray(raw.keywords)) throw new EditorialError('La respuesta no trae palabras clave.');
+  const seen = new Set<string>();
+  const valid = { type: ['principal', 'secundaria', 'long-tail'], intent: ['comercial', 'informativa', 'navegacional'], language: ['es', 'en'] };
+  const keywords = raw.keywords
+    .filter((k) => k && typeof k.term === 'string' && k.term.trim())
+    .map((k) => ({
+      term: k.term.trim().toLowerCase().slice(0, 80),
+      type: valid.type.includes(k.type) ? k.type : 'secundaria',
+      intent: valid.intent.includes(k.intent) ? k.intent : 'comercial',
+      language: valid.language.includes(k.language) ? k.language : 'es',
+    }) as SeoKeyword)
+    .filter((k) => !seen.has(k.term) && seen.add(k.term));
+  // Las palabras objetivo del autor nunca se pierden.
+  for (const t of targets) if (!seen.has(t)) { keywords.push({ term: t, type: 'secundaria', intent: 'comercial', language: 'es' }); seen.add(t); }
+  if (!keywords.some((k) => k.type === 'principal') && keywords[0]) keywords[0].type = 'principal';
+  return {
+    keywords: keywords.slice(0, 25),
+    metaTitle: clip(String(raw.metaTitle ?? ''), 60),
+    metaDescription: clip(String(raw.metaDescription ?? ''), 160),
+    contentTips: (Array.isArray(raw.contentTips) ? raw.contentTips : []).map(String).filter(Boolean).slice(0, 6),
+    rationale: String(raw.rationale ?? '').slice(0, 1000),
+  };
+}
+
+export async function suggestProjectSeo(input: SeoInput, opts: { model: EditorialModel }) {
+  const targets = input.targetKeywords.map((t) => t.trim().toLowerCase()).filter(Boolean);
+  if (FAKE()) {
+    return {
+      suggestion: sanitizeSeo({ ...SEO_EXAMPLE, metaTitle: `${input.title}: prueba local`, rationale: 'Respuesta simulada (EDITORIAL_FAKE).' }, targets),
+      usage: { model: `${opts.model} (prueba local)`, inputTokens: 0, outputTokens: 0 },
+    };
+  }
+  const prompt = `Producto: ${input.title}
+Resumen: ${input.summary}
+${input.url ? `URL del producto: ${input.url}\n` : ''}Palabras clave objetivo del autor (prioritarias):
+${targets.length ? targets.map((t) => `- ${t}`).join('\n') : '- (ninguna: propón tú)'}
+${input.previousKeywords.length ? `\nPalabras clave de la revisión anterior (mantén las que sigan siendo buenas, cambia las débiles):\n${input.previousKeywords.map((t) => `- ${t}`).join('\n')}\n` : ''}
+Contenido de la página:
+${input.body.slice(0, 12000) || '(sin contenido todavía)'}`;
+  const { data, usage } = await callJson<SeoSuggestion>({
+    model: opts.model,
+    system: SEO_RULES,
+    prompt,
+    schema: SEO_SCHEMA,
+    example: SEO_EXAMPLE,
+    effort: 'medium',
+  });
+  return { suggestion: sanitizeSeo(data, targets), usage };
+}

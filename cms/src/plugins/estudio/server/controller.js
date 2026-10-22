@@ -149,7 +149,57 @@ module.exports = ({ strapi }) => {
         if (MODELS.includes(body.model)) data.model = body.model;
         if (typeof body.autoDraftOnApproval === 'boolean') data.autoDraftOnApproval = body.autoDraftOnApproval;
         if (typeof body.weeklyProposals === 'boolean') data.weeklyProposals = body.weeklyProposals;
+        if (typeof body.seoMonthly === 'boolean') data.seoMonthly = body.seoMonthly;
+        if (typeof body.seoAutoApply === 'boolean') data.seoAutoApply = body.seoAutoApply;
         await strapi.documents(SETTINGS).update({ documentId: settings.documentId, data });
+        ctx.body = { ok: true };
+      } catch (error) {
+        fail(ctx, error);
+      }
+    },
+
+    /** Proyectos con su SEO actual, palabras objetivo y la última sugerencia de la IA. */
+    async seoListar(ctx) {
+      const projects = await strapi.documents('api::project.project').findMany({
+        status: 'draft',
+        sort: 'order:asc',
+        fields: ['title', 'slug', 'summary', 'targetKeywords', 'seoSuggestion'],
+        populate: { seo: { fields: ['metaTitle', 'metaDescription', 'keywords'] } },
+        limit: 100,
+      });
+      const withState = await Promise.all(
+        projects.map(async (p) => {
+          const pub = await strapi.documents('api::project.project').findOne({ documentId: p.documentId, status: 'published', fields: ['publishedAt'] });
+          return { ...p, publishedAt: pub?.publishedAt ?? null };
+        }),
+      );
+      ctx.body = { projects: withState };
+    },
+
+    async seoGenerar(ctx) {
+      try {
+        const results = await strapi.estudioSeo.run(strapi, ctx.request.body?.documentId || undefined);
+        ctx.body = { results };
+      } catch (error) {
+        fail(ctx, error);
+      }
+    },
+
+    async seoAplicar(ctx) {
+      try {
+        await strapi.estudioSeo.apply(strapi, ctx.params.documentId);
+        ctx.body = { ok: true };
+      } catch (error) {
+        fail(ctx, error);
+      }
+    },
+
+    async seoObjetivo(ctx) {
+      try {
+        await strapi.documents('api::project.project').update({
+          documentId: ctx.params.documentId,
+          data: { targetKeywords: str(ctx.request.body?.targetKeywords, 2000) || null },
+        });
         ctx.body = { ok: true };
       } catch (error) {
         fail(ctx, error);

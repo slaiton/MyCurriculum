@@ -19,6 +19,10 @@ module.exports = {
         ['POST', '/temas/:documentId/estado', 'cambiarEstado'],
         ['POST', '/borradores/:documentId/publicar', 'publicar'],
         ['PUT', '/ajustes', 'ajustes'],
+        ['GET', '/seo', 'seoListar'],
+        ['POST', '/seo/generar', 'seoGenerar'],
+        ['POST', '/seo/:documentId/aplicar', 'seoAplicar'],
+        ['PUT', '/seo/:documentId/objetivo', 'seoObjetivo'],
       ].map(([method, path, action]) => ({
         method,
         path,

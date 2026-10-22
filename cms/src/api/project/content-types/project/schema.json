@@ -48,6 +48,19 @@
     "repoUrl": {
       "type": "string"
     },
+    "version": {
+      "type": "string",
+      "maxLength": 30
+    },
+    "requirements": {
+      "type": "text",
+      "maxLength": 400
+    },
+    "downloads": {
+      "type": "component",
+      "component": "content.download",
+      "repeatable": true
+    },
     "stack": {
       "type": "json"
     },
@@ -71,10 +84,18 @@
     "scheduledAt": {
       "type": "datetime"
     },
+    "targetKeywords": {
+      "type": "text",
+      "maxLength": 2000
+    },
     "seo": {
       "type": "component",
       "component": "shared.seo",
       "repeatable": false
+    },
+    "seoSuggestion": {
+      "type": "json",
+      "private": true
     }
   },
   "pluginOptions": {}

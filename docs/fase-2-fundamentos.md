@@ -159,3 +159,16 @@ npm install && npm run dev -- -p 3100
   con sesión de administrador (generar, aprobar, bloqueo por `[COMPLETAR]`, descartar, validaciones, tema propio, ajustes, publicación real
   y 401 sin sesión) y verificación de la página en el navegador (carga sin errores, clic en "Generar temas", acceso desde el menú).
   Guía: `docs/contenido/estudio-editorial.md`.
+- **Cambios del CMS al instante** (2026-10-20): el CMS avisa al sitio al publicar o editar (`cms/src/revalidate.ts`), sin depender del
+  webhook manual. La red de seguridad bajó de 1 hora a 5 minutos. Causa del retraso anterior: si el webhook no estaba configurado o fallaba,
+  el sitio solo se refrescaba cada hora.
+- **Descargas en proyectos:** campos `version`, `requirements` y `downloads` (componente *Descarga*: etiqueta, plataforma, URL, tamaño y SHA-256).
+  La página del proyecto muestra los instaladores, ayuda para elegir x64/ARM64 y datos estructurados `SoftwareApplication`. Los instaladores
+  se sirven desde `/var/www/descargas` vía Nginx (Strapi bloquea ejecutables a propósito). Primer proyecto: ShareTo 0.2.0
+  (`docs/contenido/proyectos/shareto.md`).
+- **SEO de proyectos con IA** (2026-10-21): campos `targetKeywords` y `seoSuggestion` (privado) en *Proyecto*, `keywords` en el componente SEO
+  y ajustes `seoMonthly`/`seoAutoApply`. Sección "SEO de proyectos" en el Estudio editorial: generar, revisar y aplicar título, descripción
+  y palabras clave; revisión mensual (día 1, 6:00). Lógica en `cms/src/editorial/seo.ts`. Probado con DeepSeek real en CargoApp y ShareTo.
+  Guía: `docs/contenido/seo-proyectos.md`.
+- **ShareTo sin versiones en el repo:** `descargas/shareto/` guarda solo la última versión con nombres fijos (`ShareTo-win-x64-instalador.exe`,
+  `ShareTo-win-arm64-instalador.exe`); Nginx responde con `Cache-Control: no-cache` para no servir instaladores viejos.

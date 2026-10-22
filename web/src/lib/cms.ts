@@ -15,8 +15,9 @@ const CMS_URL = process.env.CMS_URL?.replace(/\/$/, '');
 const CMS_TOKEN = process.env.CMS_TOKEN;
 const DEMO = process.env.DEMO_CONTENT === 'true' && process.env.NODE_ENV !== 'production';
 
-// Red de seguridad: aunque falle un webhook, el contenido se refresca al menos cada hora.
-const SAFETY_REVALIDATE = 3600;
+// Red de seguridad: el CMS avisa al sitio al publicar (cms/src/index.ts); si ese aviso fallara,
+// el contenido se refresca igual en máximo 5 minutos. Las consultas van por la red interna de Docker.
+const SAFETY_REVALIDATE = 300;
 
 export const isCmsEnabled = () => Boolean(CMS_URL);
 
@@ -216,6 +217,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
     {
       'filters[slug][$eq]': slug,
       'populate[cover]': true,
+      'populate[downloads]': true,
       'populate[seo][populate]': '*',
       'populate[body][on][content.rich-text]': true,
       'populate[body][on][content.markdown]': true,

@@ -63,6 +63,14 @@
     },
     "styleGuide": {
       "type": "text"
+    },
+    "seoMonthly": {
+      "type": "boolean",
+      "default": true
+    },
+    "seoAutoApply": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

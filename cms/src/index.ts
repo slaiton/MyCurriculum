@@ -2,6 +2,8 @@ import type { Core } from '@strapi/strapi';
 import { errors } from '@strapi/utils';
 import { ensureSettings, pendingPlaceholders, runPendingDrafts, runProposals } from './editorial/service';
 import { seedIfEmpty } from './seed';
+import { notifySite } from './revalidate';
+import { applySeo, runSeoSuggestions } from './editorial/seo';
 
 // Tipos con página pública propia: prefijo de su URL en el sitio.
 const PUBLIC_PATHS: Record<string, string> = {
@@ -32,6 +34,16 @@ async function registerSlugRedirect(strapi: Core.Strapi, uid: string, oldSlug: s
 
 export default {
   register({ strapi }: { strapi: Core.Strapi }) {
+    // Funciones de SEO para el plugin Estudio editorial (que está en JavaScript y no importa TypeScript).
+    (strapi as unknown as { estudioSeo: unknown }).estudioSeo = { run: runSeoSuggestions, apply: applySeo };
+
+    // Avisa al sitio para que muestre los cambios al instante (sin depender de configurar un webhook en el panel).
+    strapi.documents.use(async (context, next) => {
+      const result = await next();
+      notifySite(strapi, context.uid, context.action, result);
+      return result;
+    });
+
     // Redacción asistida: al aprobar un tema se redacta y se sube como borrador (en segundo plano,
     // para no bloquear el panel). La tarea programada reintenta lo que quede pendiente.
     strapi.documents.use(async (context, next) => {

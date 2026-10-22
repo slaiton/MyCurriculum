@@ -1,0 +1,3 @@
+# ShareTo 0.2.0 (solo se publica la última versión funcional)
+f55d71fc300d33d3359b534659eec859ee6fb46d473d0130cf4b81603e43a647  ShareTo-win-arm64-instalador.exe
+bd3088d549cf2e93c2833d19fc678b09d608c85eb1a677a135f60d0344db9cdc  ShareTo-win-x64-instalador.exe

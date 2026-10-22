@@ -1,0 +1,12 @@
+{
+  "collectionName": "components_content_downloads",
+  "info": { "displayName": "Descarga", "icon": "download", "description": "Instalador o archivo descargable (enlace externo o en /descargas)" },
+  "options": {},
+  "attributes": {
+    "label": { "type": "string", "required": true, "maxLength": 80 },
+    "platform": { "type": "enumeration", "enum": ["windows-x64", "windows-arm64", "macos", "linux", "android", "ios", "otro"], "default": "windows-x64", "required": true },
+    "url": { "type": "string", "required": true },
+    "sizeMb": { "type": "decimal" },
+    "sha256": { "type": "string", "maxLength": 64 }
+  }
+}

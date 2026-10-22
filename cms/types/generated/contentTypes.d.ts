@@ -581,6 +581,8 @@ export interface ApiEditorialSettingEditorialSetting
       }>;
     proposeNow: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     publishedAt: Schema.Attribute.DateTime;
+    seoAutoApply: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    seoMonthly: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     styleGuide: Schema.Attribute.Text;
     topicsPerRun: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
@@ -713,6 +715,7 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    downloads: Schema.Attribute.Component<'content.download', true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -722,14 +725,23 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
     repoUrl: Schema.Attribute.String;
+    requirements: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 400;
+      }>;
     scheduledAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
+    seoSuggestion: Schema.Attribute.JSON & Schema.Attribute.Private;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     stack: Schema.Attribute.JSON;
     summary: Schema.Attribute.Text &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 200;
+      }>;
+    targetKeywords: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 2000;
       }>;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
@@ -740,6 +752,10 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     url: Schema.Attribute.String;
+    version: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 30;
+      }>;
   };
 }
 

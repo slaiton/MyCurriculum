@@ -1,4 +1,5 @@
 import type { Core } from '@strapi/strapi';
+import { runSeoSuggestions, shouldRunMonthly } from '../src/editorial/seo';
 import { getSettings, runPendingDrafts, runProposals } from '../src/editorial/service';
 
 // Publicación programada sin el plan de pago (Releases): cada minuto publica las entradas
@@ -44,5 +45,13 @@ export default {
       if ((await getSettings(strapi)).weeklyProposals) await runProposals(strapi);
     },
     options: { rule: '0 7 * * 1', tz: 'America/Bogota' },
+  },
+
+  // SEO de proyectos: revisa palabras clave y metadatos el día 1 de cada mes (6:00), si está activado.
+  monthlyProjectSeo: {
+    task: async ({ strapi }: { strapi: Core.Strapi }) => {
+      if (await shouldRunMonthly(strapi)) await runSeoSuggestions(strapi).catch((e) => strapi.log.error(`[seo] ${e.message}`));
+    },
+    options: { rule: '0 6 1 * *', tz: 'America/Bogota' },
   },
 };

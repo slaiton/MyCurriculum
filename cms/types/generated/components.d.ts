@@ -1,5 +1,40 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface ContentDownload extends Struct.ComponentSchema {
+  collectionName: 'components_content_downloads';
+  info: {
+    description: 'Instalador o archivo descargable (enlace externo o en /descargas)';
+    displayName: 'Descarga';
+    icon: 'download';
+  };
+  attributes: {
+    label: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 80;
+      }>;
+    platform: Schema.Attribute.Enumeration<
+      [
+        'windows-x64',
+        'windows-arm64',
+        'macos',
+        'linux',
+        'android',
+        'ios',
+        'otro',
+      ]
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'windows-x64'>;
+    sha256: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 64;
+      }>;
+    sizeMb: Schema.Attribute.Decimal;
+    url: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface ContentImage extends Struct.ComponentSchema {
   collectionName: 'components_content_images';
   info: {
@@ -67,6 +102,7 @@ export interface SharedSeo extends Struct.ComponentSchema {
   };
   attributes: {
     canonicalUrl: Schema.Attribute.String;
+    keywords: Schema.Attribute.JSON;
     metaDescription: Schema.Attribute.Text &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 160;
@@ -83,6 +119,7 @@ export interface SharedSeo extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
+      'content.download': ContentDownload;
       'content.image': ContentImage;
       'content.markdown': ContentMarkdown;
       'content.rich-text': ContentRichText;

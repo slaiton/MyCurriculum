@@ -17,6 +17,7 @@ import {
   Toggle,
   Typography,
 } from '@strapi/design-system';
+import { SeoProyectos } from './SeoProyectos';
 import { ArrowClockwise, Check, Cross, Eye, PaperPlane, Pencil, Plus, Sparkle } from '@strapi/icons';
 
 type Status = 'propuesto' | 'aprobado' | 'en_redaccion' | 'borrador_listo' | 'descartado' | 'error';
@@ -56,6 +57,8 @@ interface Summary {
     proposeNow?: boolean;
     lastProposalAt?: string | null;
     lastProposalResult?: string | null;
+    seoMonthly?: boolean;
+    seoAutoApply?: boolean;
   };
   categories: { documentId: string; name: string }[];
   topics: Topic[];
@@ -522,6 +525,12 @@ const EstudioPage = () => {
               ))}
             </Flex>
           </Section>
+
+          <SeoProyectos
+            settings={data.settings}
+            providerReady={providerReady}
+            onSettings={(d) => run('ajustes', () => put('/estudio/ajustes', d))}
+          />
 
           {groups.publicados.length > 0 && (
             <Section title="Publicados desde el estudio" count={groups.publicados.length}>

@@ -74,12 +74,22 @@ categorías y proyectos).
 1. Abre `https://cms.slaiton.com/admin` y **crea tu cuenta de administrador**. Es la única cuenta; no hay registro público.
 2. **Token de lectura:** *Settings → API Tokens → Create new API Token*. Nombre `web`, tipo **Read-only**,
    duración **Unlimited**. Copia el valor en `CMS_TOKEN` de `infra/.env`.
-3. **Webhook de actualización:** *Settings → Webhooks → Create new webhook*.
-   - URL: `http://web:3000/api/revalidate` (red interna de Docker).
-   - Header: `x-revalidate-secret` con el valor de `REVALIDATE_SECRET`.
-   - Eventos: *Entry* → create, update, delete, publish, unpublish.
+3. **Actualización al instante:** es automática. Al publicar, el CMS avisa al sitio por la red interna de Docker
+   (`WEB_REVALIDATE_URL` y `REVALIDATE_SECRET` en `docker-compose.yml`). No hace falta crear un webhook en el panel;
+   si ya creaste uno, puedes dejarlo o borrarlo. Si el aviso fallara, el sitio se refresca solo en máximo 5 minutos.
 4. Vuelve a desplegar para que el sitio use el token: `bash infra/scripts/deploy.sh`.
 5. Prueba: publica algo en el panel y recarga `https://nuevo.slaiton.com`. Debe verse en segundos.
+
+## Descargas de aplicaciones (instaladores)
+
+Strapi no acepta ejecutables (`.exe`) por seguridad. Los instaladores van en el repo en `descargas/<app>/`, **solo la última
+versión funcional y con nombre fijo** (p. ej. `ShareTo-win-x64-instalador.exe`) más su `SHA256SUMS.txt`; el historial de
+versiones se lleva fuera de este repo. Llegan al servidor con `git pull` y Nginx (`location /descargas/` en
+`infra/nginx/cms.slaiton.com.conf`) los publica en `https://cms.slaiton.com/descargas/<app>/<archivo>`.
+
+Para una versión nueva: reemplaza los archivos, regenera `SHA256SUMS.txt`, haz commit y `git pull` en el servidor, y en el panel
+actualiza **version** y las huellas/tamaños de *downloads*. Los enlaces no cambian. Cada reemplazo suma el tamaño del archivo al
+historial de git (GitHub rechaza archivos de más de 100 MB).
 
 ## 4. Copias de seguridad
 

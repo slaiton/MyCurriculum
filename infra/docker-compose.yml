@@ -45,6 +45,9 @@ services:
       DATABASE_SSL: "false"
       CLIENT_URL: ${SITE_URL}
       PREVIEW_SECRET: ${PREVIEW_SECRET}
+      # Aviso al sitio al publicar (red interna de Docker): los cambios se ven al instante.
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET}
+      WEB_REVALIDATE_URL: http://web:3000/api/revalidate
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
     volumes:
