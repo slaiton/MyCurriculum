@@ -5,7 +5,7 @@
 # Secrets requeridos (Settings > Secrets and variables > Actions):
 #   SERVER_HOST, SERVER_USERNAME, SSH_PRIVATE_KEY  (ya existen para web.yml)
 #   SERVER_KNOWN_HOSTS   salida de: ssh-keyscan -H <tu-servidor>
-#   SERVER_APP_DIR       carpeta del repo clonado en el servidor, p. ej. /opt/slaiton
+#   SERVER_APP_DIR       carpeta del repo clonado en el servidor: /var/www/slaiton.com
 name: Deploy servidor
 
 on:

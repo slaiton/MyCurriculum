@@ -37,9 +37,9 @@ En tu proveedor de DNS crea registros **A** hacia la IP del servidor:
 
 ```bash
 # 2.1 Clonar el repositorio (si es privado, agrega antes una "deploy key" de solo lectura del servidor en GitHub)
-sudo mkdir -p /opt/slaiton && sudo chown "$USER" /opt/slaiton
-git clone git@github.com:slaiton/MyCurriculum.git /opt/slaiton
-cd /opt/slaiton
+sudo mkdir -p /var/www/slaiton.com && sudo chown "$USER" /var/www/slaiton.com
+git clone git@github.com:slaiton/MyCurriculum.git /var/www/slaiton.com
+cd /var/www/slaiton.com
 
 # 2.2 Variables de entorno
 cp infra/.env.example infra/.env
@@ -96,7 +96,7 @@ historial de git (GitHub rechaza archivos de más de 100 MB).
 ```bash
 crontab -e
 # Todos los días a las 3:00
-0 3 * * * cd /opt/slaiton && bash infra/scripts/backup.sh >> /var/log/slaiton-backup.log 2>&1
+0 3 * * * cd /var/www/slaiton.com && bash infra/scripts/backup.sh >> /var/log/slaiton-backup.log 2>&1
 ```
 
 Las copias quedan en `infra/backups/` (14 días). Se recomienda copiarlas fuera del servidor
@@ -114,7 +114,7 @@ Las copias quedan en `infra/backups/` (14 días). Se recomienda copiarlas fuera 
 
 ## Despliegues siguientes
 
-- Desde el servidor: `cd /opt/slaiton && bash infra/scripts/deploy.sh`.
+- Desde el servidor: `cd /var/www/slaiton.com && bash infra/scripts/deploy.sh`. Resumen paso a paso, con qué hacer según el tipo de cambio, en el [README principal](../README.md).
 - O desde GitHub: *Actions → Deploy servidor → Run workflow*. Requiere los secrets descritos en
   `.github/workflows/deploy-server.yml`.
 
@@ -123,7 +123,7 @@ Las copias quedan en `infra/backups/` (14 días). Se recomienda copiarlas fuera 
 ## Comandos útiles
 
 ```bash
-cd /opt/slaiton/infra
+cd /var/www/slaiton.com/infra
 docker compose ps                 # estado
 docker compose logs -f web        # logs del sitio
 docker compose logs -f cms        # logs del CMS (incluye publicaciones programadas)

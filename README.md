@@ -1,70 +1,75 @@
-# Getting Started with Create React App
+# slaiton.com
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Sitio personal, blog y portafolio de Stiven Laiton.
 
-## Available Scripts
+| Carpeta | Qué es |
+|---|---|
+| `web/` | Sitio público (Next.js). |
+| `cms/` | Panel de contenido (Strapi), con el **Estudio editorial** (temas, borradores y SEO con IA). |
+| `infra/` | Docker Compose, Nginx y scripts de despliegue, backup y restauración. Guía completa: [infra/README.md](infra/README.md). |
+| `descargas/` | Instaladores de las apps (solo la última versión). Se publican en `https://cms.slaiton.com/descargas/...`. |
+| `docs/` | Documentación del proyecto y guías de contenido. |
+| `src/`, `public/`, `build/` | Sitio anterior (Create React App). Se retirará después del corte a producción. |
 
-In the project directory, you can run:
+## Despliegue después de hacer commit a `main`
 
-### `npm start`
+**Un push a `main` no despliega el sitio nuevo por sí solo.** El despliegue se lanza a mano, de una de estas dos formas:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Opción A: desde el servidor**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+ssh root@TU_SERVIDOR
+cd /var/www/slaiton.com && bash infra/scripts/deploy.sh
+```
 
-### `npm test`
+**Opción B: desde GitHub**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+*Actions → **Deploy servidor** → Run workflow*. Hace lo mismo por SSH. Necesita los secrets descritos en
+`.github/workflows/deploy-server.yml` (`SERVER_APP_DIR` debe ser `/var/www/slaiton.com`).
 
-### `npm run build`
+### Qué hace `deploy.sh`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. `git pull` del código de `main`.
+2. Reconstruye y reinicia **PostgreSQL y el CMS**, y espera a que el CMS responda. La compilación del panel de Strapi tarda unos minutos
+   y durante el reinicio el panel no está disponible un momento.
+3. Reconstruye y reinicia el **sitio** (lee el CMS para generar las páginas).
+4. Refresca la caché del sitio y borra imágenes Docker viejas.
+5. Muestra el estado de los contenedores. Los tres (`postgres`, `cms`, `web`) deben estar *running*.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Según lo que cambiaste
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+| Cambio | Qué hacer |
+|---|---|
+| Contenido (artículos, proyectos, perfil, SEO) desde el panel | **Nada.** Se publica al instante. |
+| Código de `web/` o `cms/`, campos nuevos del CMS, dependencias | `deploy.sh` (opción A o B). |
+| Solo instaladores en `descargas/` | `cd /var/www/slaiton.com && git pull` basta: Nginx los sirve directamente, sin reconstruir. |
+| Variables en `infra/.env` (en el servidor, no van en git) | `deploy.sh`. |
+| Archivos de `infra/nginx/` | No se aplican solos: copia el cambio a `/etc/nginx/sites-available/` a mano (sin pisar lo que agregó certbot) y luego `nginx -t && systemctl reload nginx`. |
 
-### `npm run eject`
+### Comprobar que quedó bien
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+cd /var/www/slaiton.com/infra && docker compose ps
+```
+```bash
+curl -sI https://cms.slaiton.com/_health | head -1
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Si algo falla, revisa los logs con `docker compose logs --tail=100 cms` o `docker compose logs --tail=100 web`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Avisos
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **Campos del CMS:** Strapi aplica los cambios de esquema al arrancar. Agregar campos es seguro; **quitar o renombrar uno borra sus datos**.
+  Haz un backup antes: `bash infra/scripts/backup.sh`.
+- **Otros procesos del push:** un push a `main` también dispara el flujo antiguo (`web.yml`, que copia `build/` del sitio anterior) y el
+  build de Vercel. No afectan al sitio nuevo y se retiran en el corte a producción.
+- **Instaladores:** cada reemplazo en `descargas/` agrega su peso al historial de git (GitHub rechaza archivos de más de 100 MB).
 
-## Learn More
+## Desarrollo local
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm --prefix cms run develop       # CMS en http://localhost:1337/admin
+npm --prefix web run dev -- -p 3100   # sitio en http://localhost:3100
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Configuración en `cms/.env` y `web/.env.local` (ver los `.env.example`). Detalle en [docs/fase-2-fundamentos.md](docs/fase-2-fundamentos.md).
