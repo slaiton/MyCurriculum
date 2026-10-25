@@ -18,6 +18,8 @@ const frameAncestors = ["'self'", cmsPublicUrl].filter(Boolean).join(' ');
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  // Avisar (a agentes) cuando la versión instalada tenga avisos de seguridad de Next.js.
+  experimental: { agentUpgrade: 'security' },
   // Monorepo: la raíz de este proyecto es /web (hay otro package-lock en la raíz del repo).
   turbopack: { root: process.cwd() },
   poweredByHeader: false,
