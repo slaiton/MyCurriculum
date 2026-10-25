@@ -350,7 +350,45 @@ a:hover > .cover img, .post-card:hover .cover img { transform: scale(1.03); }
 .footer-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .footer-nav a { color: var(--on-navy); text-decoration: none; }
 .footer-nav a:hover { color: #fff; text-decoration: underline; }
-.site-footer__bottom { padding-block: 20px 32px; border-top: 1px solid var(--navy-line); font-size: 13px; }
+.site-footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding-block: 20px 32px; border-top: 1px solid var(--navy-line); font-size: 13px; }
+.footer-link-btn { padding: 0; border: 0; background: none; color: var(--on-navy-muted); font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.footer-link-btn:hover { color: #fff; }
+
+/* ---------- Consentimiento de cookies ---------- */
+.cookie-banner {
+  position: fixed;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: var(--gutter);
+  z-index: 90;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 28px;
+  max-width: 960px;
+  margin-inline: auto;
+  padding: 20px 48px 20px 22px;
+  background: var(--navy);
+  color: #fff;
+  border: 1px solid var(--navy-line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.cookie-banner__title { font-family: var(--font-display), system-ui, sans-serif; font-size: 16px; font-weight: 600; }
+.cookie-banner p { font-size: 14px; line-height: 1.5; color: var(--on-navy); }
+.cookie-banner__text { flex: 1 1 460px; display: flex; flex-direction: column; gap: 6px; }
+.cookie-banner a { color: var(--teal-bright); }
+.cookie-banner__actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.cookie-banner .btn { min-height: 42px; padding: 0 20px; font-size: 15px; }
+.cookie-banner .btn--outline { border-color: var(--on-navy); color: #fff; }
+.cookie-banner .btn--outline:hover { background: #fff; color: var(--navy); }
+.cookie-banner__close { position: absolute; top: 8px; right: 10px; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 999px; background: transparent; color: var(--on-navy); font-size: 22px; line-height: 1; cursor: pointer; }
+.cookie-banner__close:hover { background: var(--navy-2); color: #fff; }
+@media (max-width: 620px) {
+  .cookie-banner { flex-direction: column; align-items: stretch; padding-right: 44px; }
+  .cookie-banner__actions .btn { flex: 1; }
+}
 
 /* ---------- Movimiento ----------
    Carga: header, hero escalonado, código que se escribe, chips flotando.

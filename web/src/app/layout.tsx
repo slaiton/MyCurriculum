@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import { Caveat, Figtree, Fira_Code, Sora } from 'next/font/google';
-import Script from 'next/script';
+import { Analytics } from '@/components/client/Analytics';
+import { CookieConsent } from '@/components/client/CookieConsent';
 import { PreviewBanner } from '@/components/PreviewBanner';
 import { SiteFooter } from '@/components/SiteFooter';
 import { SiteHeader } from '@/components/SiteHeader';
+import { GA_ID } from '@/lib/analytics';
 import { getSettings } from '@/lib/cms';
 import { SITE_URL } from '@/lib/content';
 import './globals.css';
@@ -13,8 +15,6 @@ const display = Sora({ subsets: ['latin'], weight: ['500', '600', '700'], variab
 const body = Figtree({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-body', display: 'swap' });
 const mono = Fira_Code({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-mono', display: 'swap' });
 const signature = Caveat({ subsets: ['latin'], weight: ['600'], variable: '--font-signature', display: 'swap' });
-
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSettings();
@@ -47,10 +47,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <SiteFooter settings={settings} />
         {GA_ID && (
           <>
-            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
-            <Script id="ga" strategy="afterInteractive">
-              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}',{anonymize_ip:true});`}
-            </Script>
+            <Analytics gaId={GA_ID} />
+            <CookieConsent />
           </>
         )}
       </body>

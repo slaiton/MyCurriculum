@@ -119,7 +119,7 @@ npm install && npm run dev -- -p 3100
 | Datos del servidor (SO, RAM, ¿Nginx existente?) | Requeridos antes de desplegar (ver `infra/README.md`). |
 | Tema visual del panel de Strapi (logo y colores) | Fase 4. |
 | Video de fondo del inicio | Hay que comprimirlo (el actual pesa 9.7 MB) y subirlo en *Ajustes del sitio → heroVideo*. Sin video, se muestra una ilustración de código. |
-| Analítica (GA4) | Solo se carga si se define `NEXT_PUBLIC_GA_ID`. Falta decidir el aviso de cookies. |
+| Analítica (GA4) | ✅ Consent Mode v2 + aviso de cookies (aceptar/rechazar). Solo carga `gtag` si existe `NEXT_PUBLIC_GA_ID` **y** la persona acepta; la navegación SPA la mide la medición mejorada de GA4. |
 | Resaltado de sintaxis en bloques de código | Opcional (Fase 5). |
 | Retiro de la app CRA, de `build/` versionado y de `web.yml` | Después del corte y con tu aprobación. |
 | Datos de experiencia con fechas solapadas | Contenido; se corrige desde el panel. |
