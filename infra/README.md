@@ -110,13 +110,16 @@ Las copias quedan en `infra/backups/` (14 días). Se recomienda copiarlas fuera 
 4. `bash infra/scripts/deploy.sh`
 5. Verifica `https://www.slaiton.com/robots.txt`: debe permitir la indexación. En pruebas lo bloquea a propósito.
 6. Google Search Console: verifica el dominio (registro TXT en el DNS) y envía `https://www.slaiton.com/sitemap.xml`.
-7. Deja Vercel unos días como respaldo y luego elimina el proyecto. Retira también `.github/workflows/web.yml`.
+7. Deja Vercel unos días como respaldo y luego elimina el proyecto. Retira también el workflow antiguo `.github/workflows/web.yml` y `build/`.
 
 ## Despliegues siguientes
 
-- Desde el servidor: `cd /var/www/slaiton.com && bash infra/scripts/deploy.sh`. Resumen paso a paso, con qué hacer según el tipo de cambio, en el [README principal](../README.md).
+- **Sitio (`web/`): automático.** Un push a `main` ejecuta `.github/workflows/deploy-web.yml` (CI + `deploy.sh web`).
+- **CMS o todo:** desde el servidor, `cd /var/www/slaiton.com && bash infra/scripts/deploy.sh cms` (o `all`).
+  Resumen paso a paso, con qué hacer según el tipo de cambio, en el [README principal](../README.md).
 - O desde GitHub: *Actions → Deploy servidor → Run workflow*. Requiere los secrets descritos en
   `.github/workflows/deploy-server.yml`.
+- `deploy.sh` acepta `web`, `cms` o `all`; sin argumento hace `all`, como siempre.
 
 **El contenido no requiere despliegue:** se publica desde el panel.
 

@@ -1,5 +1,9 @@
 'use client';
 
+// NOTA (medida temporal, 2026-10-25): este store no está montado. GA4 se carga
+// con la etiqueta directa en `components/client/Analytics.tsx`. Se conserva para
+// reactivar el Consent Mode v2 + banner más adelante.
+
 import { useSyncExternalStore } from 'react';
 
 export type ConsentChoice = 'granted' | 'denied';

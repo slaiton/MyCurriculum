@@ -1,9 +1,10 @@
-name: Curriculum
+# OBSOLETO: despliegue antiguo de la app CRA (copia `build/**` a /var/www/html/slaiton.com).
+# Desactivado: ya no se ejecuta en cada push. El sitio nuevo se despliega con deploy-web.yml.
+# Se conserva solo como referencia hasta retirar la app CRA y `build/`.
+name: Curriculum (obsoleto)
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy:

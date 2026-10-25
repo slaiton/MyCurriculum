@@ -1,5 +1,8 @@
 'use client';
 
+// NOTA: no está montado (medida temporal, GA4 se carga sin consentimiento).
+// Se conserva para reactivar el aviso de cookies más adelante.
+
 import { useEffect, useState } from 'react';
 import { closeConsentBanner, setConsent, useConsent, useConsentBannerOpen } from '@/lib/consent';
 

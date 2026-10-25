@@ -10,7 +10,8 @@
 | `web/` | Sitio nuevo: Next.js 16.4 (App Router, TypeScript), React 19.3. Sin librerías de UI ni de animación. |
 | `cms/` | Strapi actualizado de 5.47.1 a **5.57.0**, con 8 tipos de contenido, 4 componentes, publicación programada, redirecciones automáticas, vista previa y contenido inicial. |
 | `infra/` | Docker Compose (PostgreSQL 17 + CMS + sitio + Caddy opcional), configuración de Nginx alternativa, scripts de despliegue, backup y restauración, y guía de despliegue. |
-| `.github/workflows/deploy-server.yml` | Despliegue manual por SSH (no reemplaza todavía a `web.yml`). |
+| `.github/workflows/deploy-web.yml` | CI + despliegue automático del sitio (`web/`) por SSH al hacer push a `main`. |
+| `.github/workflows/deploy-server.yml` | Despliegue manual por SSH del conjunto completo (`deploy.sh` sin argumentos = `all`). |
 | `docs/` | Esta fase, la guía de publicación y las fases anteriores. |
 
 ## 2. Decisiones técnicas tomadas durante la implementación
@@ -119,9 +120,9 @@ npm install && npm run dev -- -p 3100
 | Datos del servidor (SO, RAM, ¿Nginx existente?) | Requeridos antes de desplegar (ver `infra/README.md`). |
 | Tema visual del panel de Strapi (logo y colores) | Fase 4. |
 | Video de fondo del inicio | Hay que comprimirlo (el actual pesa 9.7 MB) y subirlo en *Ajustes del sitio → heroVideo*. Sin video, se muestra una ilustración de código. |
-| Analítica (GA4) | ✅ Consent Mode v2 + aviso de cookies (aceptar/rechazar). Solo carga `gtag` si existe `NEXT_PUBLIC_GA_ID` **y** la persona acepta; la navegación SPA la mide la medición mejorada de GA4. |
+| Analítica (GA4) | ⚠️ **Medida temporal:** etiqueta directa de GA4 (`gtag.js`), sin aviso de consentimiento. Solo se carga si existe `NEXT_PUBLIC_GA_ID`; la navegación SPA la mide la medición mejorada. El código de Consent Mode v2 + banner se conserva sin montar para reactivarlo luego. |
 | Resaltado de sintaxis en bloques de código | Opcional (Fase 5). |
-| Retiro de la app CRA, de `build/` versionado y de `web.yml` | Después del corte y con tu aprobación. |
+| Retiro de la app CRA, de `build/` versionado y de `web.yml` | `web.yml` ya está desactivado (solo manual). El retiro definitivo, después del corte y con tu aprobación. |
 | Datos de experiencia con fechas solapadas | Contenido; se corrige desde el panel. |
 
 ## 8. Ajustes posteriores (2026-10-10)
@@ -172,3 +173,16 @@ npm install && npm run dev -- -p 3100
   Guía: `docs/contenido/seo-proyectos.md`.
 - **ShareTo sin versiones en el repo:** `descargas/shareto/` guarda solo la última versión con nombres fijos (`ShareTo-win-x64-instalador.exe`,
   `ShareTo-win-arm64-instalador.exe`); Nginx responde con `Cache-Control: no-cache` para no servir instaladores viejos.
+
+## 9. Despliegue web y GA4 temporal (2026-10-25)
+
+- **Sitio (`web/`) desplegado por GitHub Actions:** `.github/workflows/deploy-web.yml` ejecuta CI (`npm ci`, `npm run typecheck`,
+  `npm run build` con `CMS_URL` vacío y datos de respaldo) y, si pasa, `bash infra/scripts/deploy.sh web` por SSH. Se dispara con
+  push a `main` que toque `web/**` o los archivos de infra del sitio, y también a mano (`workflow_dispatch`). El build real sigue
+  haciéndose en el servidor con Docker (CMS + `NEXT_PUBLIC_GA_ID`).
+- **CMS sin cambios:** `.github/workflows/deploy-server.yml` sigue siendo manual y ejecuta `deploy.sh` sin argumentos (`all`).
+  `deploy.sh` ahora acepta `web`, `cms` o `all`, y añade espera/smoke test del sitio (`/robots.txt`) antes de revalidar.
+- **`web.yml` desactivado:** el workflow antiguo de la CRA queda solo con `workflow_dispatch` y marcado como obsoleto.
+- **GA4 temporal sin consentimiento:** medida solicitada mientras se define el aviso legal. `Analytics.tsx` carga la etiqueta
+  directa de GA4 (`gtag.js` + `gtag('config', …)`) sin banner. El Consent Mode v2, el banner y las preferencias siguen en
+  `web/src/lib/consent.ts`, `CookieConsent.tsx` y `CookieSettingsButton.tsx`, sin montar, para reactivarlos después.

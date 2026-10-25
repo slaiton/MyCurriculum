@@ -1,9 +1,10 @@
 # Despliegue del sitio nuevo (Next.js + Strapi) en el servidor propio.
-# MANUAL por ahora (Actions > "Deploy servidor" > Run workflow). Cuando el sitio nuevo esté
-# en producción se puede cambiar a "push: branches: [main]" y retirar web.yml (despliegue antiguo).
+# MANUAL (Actions > "Deploy servidor" > Run workflow). El sitio (`web/`) además se
+# despliega automáticamente con deploy-web.yml al hacer push a `main`. Este flujo
+# conserva el comportamiento de siempre: `deploy.sh` sin argumentos = `all`.
 #
 # Secrets requeridos (Settings > Secrets and variables > Actions):
-#   SERVER_HOST, SERVER_USERNAME, SSH_PRIVATE_KEY  (ya existen para web.yml)
+#   SERVER_HOST, SERVER_USERNAME, SSH_PRIVATE_KEY
 #   SERVER_KNOWN_HOSTS   salida de: ssh-keyscan -H <tu-servidor>
 #   SERVER_APP_DIR       carpeta del repo clonado en el servidor: /var/www/slaiton.com
 name: Deploy servidor

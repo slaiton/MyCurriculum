@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Caveat, Figtree, Fira_Code, Sora } from 'next/font/google';
 import { Analytics } from '@/components/client/Analytics';
-import { CookieConsent } from '@/components/client/CookieConsent';
 import { PreviewBanner } from '@/components/PreviewBanner';
 import { SiteFooter } from '@/components/SiteFooter';
 import { SiteHeader } from '@/components/SiteHeader';
@@ -45,12 +44,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <SiteHeader name={settings.name} role={settings.role} />
         <main id="contenido">{children}</main>
         <SiteFooter settings={settings} />
-        {GA_ID && (
-          <>
-            <Analytics gaId={GA_ID} />
-            <CookieConsent />
-          </>
-        )}
+        {GA_ID && <Analytics gaId={GA_ID} />}
       </body>
     </html>
   );

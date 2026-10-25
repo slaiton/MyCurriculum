@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { CookieSettingsButton } from '@/components/client/CookieSettingsButton';
 import type { SiteSettings } from '@/lib/types';
 import { mediaUrl } from '@/lib/content';
 
@@ -34,7 +33,6 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
       </div>
       <div className="container site-footer__bottom">
         <span>© {new Date().getFullYear()} {settings.name}</span>
-        <CookieSettingsButton />
       </div>
     </footer>
   );

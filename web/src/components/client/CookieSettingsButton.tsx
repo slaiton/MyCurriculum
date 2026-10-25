@@ -1,5 +1,8 @@
 'use client';
 
+// NOTA: no está montado (medida temporal, GA4 se carga sin consentimiento).
+// Se conserva para reactivar «Preferencias de cookies» más adelante.
+
 import { GA_ID } from '@/lib/analytics';
 import { openConsentBanner } from '@/lib/consent';
 

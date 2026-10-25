@@ -1,0 +1,73 @@
+# CI + despliegue automático del sitio (`web/`) al hacer push a `main`.
+# El CMS se sigue desplegando como hasta ahora: manualmente con deploy-server.yml,
+# o desde el servidor con `bash infra/scripts/deploy.sh cms`.
+#
+# Secrets requeridos (los mismos de deploy-server.yml):
+#   SERVER_HOST, SERVER_USERNAME, SSH_PRIVATE_KEY, SERVER_KNOWN_HOSTS, SERVER_APP_DIR
+name: Deploy web
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - 'infra/scripts/deploy.sh'
+      - 'infra/docker-compose.yml'
+      - 'infra/caddy/**'
+      - '.github/workflows/deploy-web.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-web
+  cancel-in-progress: false
+
+jobs:
+  ci:
+    name: CI (typecheck y build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Validación del build sin CMS: usa el contenido de respaldo del código.
+      # El build real (con CMS y NEXT_PUBLIC_GA_ID) lo hace el servidor en Docker.
+      - name: Build
+        run: npm run build
+        env:
+          CMS_URL: ''
+          CMS_TOKEN: ''
+          NEXT_TELEMETRY_DISABLED: '1'
+
+  deploy:
+    name: Desplegar en el servidor
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Configurar SSH
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          echo "${{ secrets.SERVER_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Desplegar sitio
+        run: |
+          ssh -i ~/.ssh/id_deploy "${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}" \
+            "cd '${{ secrets.SERVER_APP_DIR }}' && bash infra/scripts/deploy.sh web"

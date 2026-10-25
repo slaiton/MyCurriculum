@@ -1,8 +1,6 @@
 'use client';
 
 import Script from 'next/script';
-import { useEffect } from 'react';
-import { useConsent } from '@/lib/consent';
 
 declare global {
   interface Window {
@@ -11,43 +9,18 @@ declare global {
   }
 }
 
-function clearAnalyticsCookies() {
-  const names = document.cookie
-    .split(';')
-    .map((cookie) => cookie.split('=')[0]?.trim())
-    .filter((name): name is string => Boolean(name))
-    .filter((name) => name === '_ga' || name === '_gid' || name.startsWith('_ga_') || name.startsWith('_gat'));
-
-  for (const name of names) {
-    document.cookie = `${name}=; Max-Age=0; path=/`;
-    document.cookie = `${name}=; Max-Age=0; path=/; domain=${window.location.hostname}`;
-    document.cookie = `${name}=; Max-Age=0; path=/; domain=.${window.location.hostname}`;
-  }
-}
-
 /**
- * Carga GA4 solo después de que la persona acepta el consentimiento.
+ * Etiqueta de Google Analytics 4, cargada directamente y sin aviso de consentimiento.
+ *
+ * MEDIDA TEMPORAL: el código de consentimiento sigue en `web/src/lib/consent.ts`,
+ * `CookieConsent.tsx` y `CookieSettingsButton.tsx`, pero no se monta. Para volver
+ * al Consent Mode v2 + banner basta con restaurar esas piezas en el layout y el pie.
+ *
  * Las navegaciones entre rutas las mide la "medición mejorada" de GA4
  * (cambios en el historial del navegador), por eso NO se envían pageviews
  * manuales: hacerlo duplicaría las visitas.
  */
 export function Analytics({ gaId }: { gaId: string }) {
-  const consent = useConsent();
-
-  // Si se retira el consentimiento, se deja de medir y se borran las cookies.
-  useEffect(() => {
-    if (consent !== 'denied') return;
-    window.gtag?.('consent', 'update', {
-      analytics_storage: 'denied',
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied',
-    });
-    clearAnalyticsCookies();
-  }, [consent]);
-
-  if (consent !== 'granted') return null;
-
   const id = JSON.stringify(gaId);
 
   return (
@@ -61,18 +34,8 @@ export function Analytics({ gaId }: { gaId: string }) {
         {`
 window.dataLayer = window.dataLayer || [];
 function gtag(){window.dataLayer.push(arguments);}
-gtag('consent', 'default', {
-  analytics_storage: 'denied',
-  ad_storage: 'denied',
-  ad_user_data: 'denied',
-  ad_personalization: 'denied'
-});
-gtag('consent', 'update', { analytics_storage: 'granted' });
 gtag('js', new Date());
-gtag('config', ${id}, {
-  allow_google_signals: false,
-  allow_ad_personalization_signals: false
-});
+gtag('config', ${id});
         `}
       </Script>
     </>
